@@ -1,0 +1,283 @@
+'''belajar __iter__ dan __next__ lanjutan'''
+#iterable ≠ iterator
+# iterable hanya menyediakan iterator
+# iterator yang menyimpan state
+print('Latihan Iter dan next lanjutan')
+
+class rangeterbalik:
+
+  def __init__(self,n):
+    self.n = n
+
+  def __iter__(self):
+    return iterator(self.n)
+
+class iterator:
+
+  def __init__(self,n):
+    self.current = 0
+    self.n = n
+
+  def __iter__(self):
+    return self
+
+  def __next__(self):
+    if self.n <= self.current:
+      raise StopIteration
+    val = self.n
+    self.n -=1
+    return val
+print (rangeterbalik.__dict__)
+a = rangeterbalik(5)
+print (a.__dict__)
+for b in a:
+  print (b)
+for x in a:
+  print (x) # bisa dipakai berulang kali
+
+print()
+
+'''belajar generator(yield)'''
+print ('belajar generator(yield)')
+print()
+# yield merupakan mesin iterator otomatis (iter dan next
+# dalam satu paket)
+
+# yield itu :
+#-return + pause lanjut lagi saat next dipanggil
+#-fungsi tidak mati
+#-state dibekukan
+#-eksekusi berlanjut tepat setelah yield berakhir
+
+class Ganjil:
+
+  def __init__ (self,n):
+    self.n = n
+
+  def __iter__(self):
+    current = 1
+    while current <= self.n:
+      yield current
+      current += 2
+
+ 
+for m in Ganjil(10):
+  print (m)
+print()  
+for n in Ganjil(4):
+  print (n)
+print()
+print ('Latihan yield doang tanpa class')
+def genap(n):
+  current = 4
+  while current <= n:
+    yield current
+    current +=4
+
+j = genap(70) # gabisa diulang karena
+for a in j: # satu state,satu generator,satu nyawa yaitu
+  print (a) # j = genap(70)
+print()
+for b in j:
+  print (b) # kosong
+
+# tapi kalo ini bisa diulang
+for a in genap(20):
+  print (a) # karena state baru,generator baru,nyawa baru
+print()
+for b in genap(20):
+  print (b)
+
+print()
+print ('Latihan yield 2')
+print()
+def checkpoint(n):
+  current = 3
+  while current <= n:
+    yield current
+    current += 3
+
+for a in checkpoint(11):
+  print (a)
+
+print()
+print ('Latihan yield 3')
+print()
+
+def otf(n): # tanpa yield,g ada state
+  hasil = []
+  for i in range(1,n+1):
+    hasil.append(i)
+  return hasil
+
+a = otf(5)
+for h in a:
+  print (h)
+for h in a:
+  print (h)
+print()
+
+def otf_2(n): #dengan yield
+  for a in range(1,n+1):
+    yield a
+
+a = otf_2(5)
+for j in a:
+  print (j)
+for k in a:
+  print (k)
+
+def tes():
+    print("mulai")
+    yield 1
+    print("lanjut")
+    yield 2
+    print('selesai')
+
+
+for a in tes():
+  print (a)
+print()
+'''belajar yield from '''
+# yield from: menyambungkan mesin ke mesin lain
+
+print ('belajar yield from')
+print()
+def a():
+  print ('a') #next(df) kedua
+  print ('b')
+  yield 1
+  yield 2 # next(df) ketiga
+def b():
+  yield 0 # dieksekusi pertama / next(df) yg pertama
+  yield from a()
+  print ('end') #next(df) terakhir
+  yield 1
+
+df = b()
+print (next(df))
+print (next(df))
+print (next(df))
+print (next(df))
+
+
+print()
+
+
+def a (*wife):
+  for g in wife:
+    print ('namaku istriku',g)
+    yield 3
+    yield 4
+
+def b():
+  yield 1
+  yield 2
+  yield from a('Hutao','Raiden shogun','YaeMiko')
+
+for ls in b():
+  print (ls)
+# Generator (yield) itu cocok untuk 
+#•alur linier
+#•satu arah
+#•konsumsi satu kali
+#•data besar / tak terbatas
+
+# Dan tidak cocok jika :
+#•butuh akses ulang
+#•butuh loncat-loncat
+#•butuh state kompleks
+#•butuh hasil lengkap cepat
+
+'''belajar descriptor'''
+# DESCRIPTOR
+#•Objek yang mengontrol akses atribut milik objek lain.
+#•Objek yg nyelip di class lain 
+
+
+'''latihan'''
+class transaksi:
+
+    def __init__(self,jenis:str,jumlah:int):
+        if jenis not in ("SETOR","TARIK"):
+            raise ValueError("jenis hanya 'SETOR' dan 'TARIK'")
+        if jumlah <= 0:
+            raise ValueError("jumlah harus positif")
+        self.jenis = jenis
+        self.jumlah = jumlah
+
+    def __str__(self):
+        return f'{self.jenis} : {self.jumlah}'
+
+    def __repr__(self):
+        return f'transaksi("{self.jenis}" ":" "{self.jumlah}")'
+
+
+class Dompet:
+    def __init__(self,nama,saldo):
+        self.riwayat = []
+        self.nama = nama
+        self.saldo = saldo
+    def setor(self,value):
+        self.saldo += value
+        hasil = transaksi("SETOR",value)
+        self.riwayat.append(hasil)
+    def tarik(self,value):
+        self.saldo -= value
+        hasil = transaksi("TARIK",value)
+        self.riwayat.append(hasil)
+    def __iter__(self):
+        for t in self.riwayat:
+            yield t
+
+    def __eq__(self,other):
+        if not isinstance(other,Dompet):
+            return NotImplemented
+        return self.nama == other.nama and self.saldo == other.saldo
+
+    def transaksi_setor(self):
+        return [s for s in self.riwayat if s.jenis == "SETOR"]
+
+    def transaksi_tarik(self):
+        return [t for t in self.riwayat if t.jenis == "TARIK"]
+
+    def total_setor(self):
+        total = 0
+        for s in self.riwayat:
+            if s.jenis == "SETOR":
+                total += s.jumlah
+        return total
+
+    def total_tarik(self):
+        total = 0
+        for t in self.riwayat:
+            if t.jenis == "TARIK":
+                total += t.jumlah
+        return total
+    def __enter__(self):
+        self.saldo_awal = self.saldo
+        print ('Saldo awal : ',self.saldo_awal)
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.saldo_akhir = self.saldo
+        selisih = self.saldo_akhir - self.saldo_awal
+        print ('Saldo akhir :',s
+        print("Selisih:", selisih)
+        return False
+
+        
+d = Dompet('Yaemiko',98)
+d2 = Dompet('HuTao',87)
+d.setor(887)
+d.tarik(86)
+d2.setor(8000)
+d2.tarik(76)
+print ('d = d2 ?',d == d2)
+print (d.transaksi_setor())
+print (d.transaksi_tarik())
+print (d2.transaksi_setor())
+print (d2.transaksi_tarik())
+
+with d as r:
+  r.setor(87)
