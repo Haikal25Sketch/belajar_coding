@@ -1,7 +1,7 @@
 class AkunBank:
   __BankName = " Loli Bank Nasional"
 
-  def __init__(self,nama,nomer_rekening,pin,saldo): #Settingan 
+  def __init__(self,nama,nomer_rekening,pin:str,saldo): #Settingan 
     self.__nama = nama
     self.__pin =str(pin)
     self.__saldoAwal = 0
@@ -69,21 +69,21 @@ class AkunBank:
 
 
 
-haikal = AkunBank('Haikal',176545,1707,0) # membuat akun biasa dengan __init__
-hutao = AkunBank('HuTao',175455,7017,1)
-string = "Nahida|175645|7887|2" #membuat akun dari string
+haikal = AkunBank('Haikal',176545,"1707",0) # membuat akun biasa dengan __init__
+hutao = AkunBank('HuTao',175455,"7071",1)
+string = "Nahida|175645|'7887'|2" #membuat akun dari string
 nahida = AkunBank.dari_string(string)
 print (nahida)
 
 print ('Sisa saldo haikal :',haikal.saldo) # pengecekan saldo
 try:
-  haikal.saldo =2000 # set saldo dengan saldo.setter
+  haikal.saldo =-2000 # set saldo dengan saldo.setter
 except ValueError as e:
   print ("Errror Terdeteksi : ",e) # 
 print ('Jumlah saldo haikal setelah di set  :',haikal.saldo) #pengecekan saldo dengan saldo.getter
 haikal.saldo = 20000 # set saldo normal
 print ('Jumlah saldo haikal setelah di set :',haikal.saldo) #pengecekan saldo normal
-
+haikal.pin_validation("1707")
 print ('Validasi pin 1707 :',AkunBank.pin_validation(1707)) #validasi pin
 print ('Validasi pin 894a :',AkunBank.pin_validation("894a"))
 print ('Validasi pin "1707" :',AkunBank.pin_validation("1707"))
@@ -101,5 +101,5 @@ hutao.transfer(haikal,70)
 print (haikal)
 print (repr(haikal))
 
-print (AkunBank.__dict__)
+
 
