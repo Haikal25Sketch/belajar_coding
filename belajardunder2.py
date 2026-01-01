@@ -28,7 +28,7 @@ class iterator:
     self.n -=1
     return val
 print (rangeterbalik.__dict__)
-a = rangeterbalik(5)
+a = rangeterbalik(1)
 print (a.__dict__)
 for b in a:
   print (b)
@@ -193,8 +193,40 @@ for ls in b():
 # DESCRIPTOR
 #•Objek yang mengontrol akses atribut milik objek lain.
 #•Objek yg nyelip di class lain 
+#3 senjata Descriptor
+#__get__(self,instance,owner)
+#__set__(self,instance,value)
+#__detel__(self,instance)
+'''latihan Descriptor'''
 
+class nonemptystring:
 
+	def __set_name__(self,owner,name):
+		self.name = name
+
+	def __get__(self,instance,owner):
+		if instance is None:
+			return self
+		return instance.__dict__.get(self.name)
+
+	def __set__(self,instance,value):
+		if not isinstance(value,str):
+			raise TypeError("Nilai harus string")
+		if  value.strip() == "":
+			raise ValueError("Nilai tidak boleh kosong")
+		instance.__dict__[self.name] = value
+
+	def __delete__(self,instance):
+		if self.name in instance.__dict__:
+			del instance.__dict__[self.name]
+
+class Str:
+	name = nonemptystring()
+
+	def __init__(self,name):
+		self.name = name
+u = Str('Haikal')
+print (u.name)
 '''latihan'''
 class transaksi:
 
@@ -262,7 +294,7 @@ class Dompet:
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.saldo_akhir = self.saldo
         selisih = self.saldo_akhir - self.saldo_awal
-        print ('Saldo akhir :',s
+        print ('Saldo akhir :',selisih)
         print("Selisih:", selisih)
         return False
 
