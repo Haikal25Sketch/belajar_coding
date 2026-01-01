@@ -196,7 +196,7 @@ for ls in b():
 #3 senjata Descriptor
 #__get__(self,instance,owner)
 #__set__(self,instance,value)
-#__detel__(self,instance)
+#__delete__(self,instance)
 '''latihan Descriptor'''
 
 class nonemptystring:
@@ -227,6 +227,8 @@ class Str:
 		self.name = name
 u = Str('Haikal')
 print (u.name)
+
+
 '''latihan'''
 class transaksi:
 
