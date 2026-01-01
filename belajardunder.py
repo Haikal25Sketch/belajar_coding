@@ -51,7 +51,9 @@ class produk:
     return f"produk(nama :'{self.nama}'\nharga : '{self.harga}')"
 
   def __eq__(self,other):
-    return self.harga == other.harga
+    if not isinstance(other,produk):
+      return NotImplemented
+    return self.harga == other.harga and self.nama == other    .nama
 
   def __ne__(self,other):
     return self.harga != other.harga
@@ -309,7 +311,6 @@ class example:
   def __init__(self,*nama):
     self.nama = nama # iterable ≠ iterator
     self.batas = 0
-
   def __len__(self):
     return len(self.nama) # ini adalah Iterator sekali pakai
   def __iter__(self): # __iter__ yang bagus harus mereturn iterator baru
