@@ -60,19 +60,19 @@ class Ganjil:
       yield current
       current += 2
 
- 
+
 for m in Ganjil(10):
   print (m)
-print()  
+print()
 for n in Ganjil(4):
   print (n)
 print()
 print ('Latihan yield doang tanpa class')
 def genap(n):
-  current = 4
+  current = 0
   while current <= n:
     yield current
-    current +=4
+    current +=2
 
 j = genap(70) # gabisa diulang karena
 for a in j: # satu state,satu generator,satu nyawa yaitu
@@ -96,9 +96,10 @@ def checkpoint(n):
   while current <= n:
     yield current
     current += 3
-
-for a in checkpoint(11):
-  print (a)
+a = checkpoint(11)
+print (next(a))
+print (next(a))
+print (next(a))
 
 print()
 print ('Latihan yield 3')
@@ -225,10 +226,43 @@ class Str:
 
 	def __init__(self,name):
 		self.name = name
-u = Str('Haikal')
-print (u.name)
+u = Str('Haikal') # ini benar
+#b = Str(76) # ini salah
+#u.name = 66 Ini salah
+print()
+'''latihan Descriptor 2'''
+print ('latihan descriptor')
 
+class MaxLength:
+	def __init__(self,maxlength):
+		self.maxlength = maxlength
 
+	def __set_name__(self,owner,name):
+		self.name = name
+	def __get__(self,instance,owner):
+		if instance is None:
+			return self
+		return instance.__dict__.get(self.name)
+	def __set__(self,instance,value):
+		if not isinstance(value,str):
+			raise TypeError('Nilai harus String')
+		if len(value) > self.maxlength:
+			raise TypeError ('Karakter terlalu panjang')
+		instance.__dict__[self.name] = value
+	def __delete__(self,instance):
+		if self.name in instance.__dict__:
+			del instance.__dict__[self.name]
+
+class data:
+	name = MaxLength(1)
+
+	def __init__(self,name):
+		self.name = name
+
+k = data('rimuru')
+print (k.name)
+k.name = 87
+print (k.name)
 '''latihan'''
 class transaksi:
 
