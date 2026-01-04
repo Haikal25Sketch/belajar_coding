@@ -427,7 +427,7 @@ s = setor(10000)
 t = tarik(1000)
 tf = transfer(w2,1000)
 print (w.saldo)
-w.proses(s)
+w.proses(s) # w.proses(setor(10000)) juga bisa
 print (w.saldo)
 print ('saldo w2 :',w2.saldo)
 w.proses(tf)
