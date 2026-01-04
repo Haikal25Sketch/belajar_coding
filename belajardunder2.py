@@ -254,14 +254,14 @@ class MaxLength:
 			del instance.__dict__[self.name]
 
 class data:
-	name = MaxLength(1)
+	name = MaxLength(10)
 
 	def __init__(self,name):
 		self.name = name
 
 k = data('rimuru')
 print (k.name)
-k.name = 87
+k.name = 'latih'
 print (k.name)
 '''latihan'''
 class transaksi:
@@ -349,3 +349,86 @@ print (d2.transaksi_tarik())
 
 with d as r:
   r.setor(87)
+
+print()
+'''PENGENALAN INHERITANCE DAN POLYMORPHISM'''
+print ('Pengenalan Inheritance dan Polymorphism')
+print()
+#Inheritance : Class baru mewakili perilaku dan struktur class lama
+#MethodOverride : Class anak mengganti perilaku induk
+#Polymorphism : Satu interface banyak perilaku / cara pakai samahasil beda
+
+class kendaraan:
+
+	def jalan (self):
+		print ('kendaraan melaju')
+
+class mobil(kendaraan): # inheritance, coba ketik mobil.jalan() dan lihat hasilnya
+	pass
+
+class motor(kendaraan):
+	def jalan(self):
+		print ('motor melaju') # method override
+
+k = kendaraan()
+m = mobil()
+m2 = motor()
+k.jalan()
+m.jalan() # unik,ga ada def jalan tapi outputnya ada
+m2.jalan()
+print()
+machine = [kendaraan(),mobil(),motor()] #Polymorphism
+for mac in machine: #satu interface banyak perilaku
+	mac.jalan()
+
+'''latihan'''
+print ('latihan polymorphism dan inheritance ')
+
+class Transaksi: # ink kelas induk
+	def proses(self,saldo):
+		raise NotImplementedError ("Jangan dilewat proses() nya)")
+
+class setor(Transaksi): # 3 class adalah kelas anak
+	def __init__(self,saldo):
+		self.saldo = saldo
+		
+	def proses(self,jumlah):
+		return self.saldo + jumlah
+		
+class tarik(Transaksi):
+	def __init__(self,saldo):
+		self.saldo = saldo
+
+	def proses(self,jumlah):
+		return self.saldo -jumlah
+		
+class transfer(Transaksi):
+
+	def __init__(self,target,jumlah):
+		self.target = target
+		self.jumlah = jumlah
+		self.fee = 2.500
+
+	def proses (self,saldo_pengirim):
+		self.target.saldo += self.jumlah
+		print (f'Transfer {self.jumlah} ke {self.target.nama} berhasil!!!')
+		return saldo_pengirim - (self.jumlah + self.fee)
+		
+class wallet :
+
+	def __init__(self,saldo,nama):
+		self.saldo = saldo
+		self.nama = nama
+	def proses(self,transaksi): # polymorphism disini
+		self.saldo = transaksi.proses(self.saldo)
+w = wallet(8000,'Haikal')
+w2 = wallet(9000,'YaeMiko')
+s = setor(10000)
+t = tarik(1000)
+tf = transfer(w2,1000)
+print (w.saldo)
+w.proses(s)
+print (w.saldo)
+print ('saldo w2 :',w2.saldo)
+w.proses(tf)
+print ('saldo w2 :',w2.saldo)
