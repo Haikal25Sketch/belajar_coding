@@ -189,15 +189,18 @@ for ls in b():
 #•butuh loncat-loncat
 #•butuh state kompleks
 #•butuh hasil lengkap cepat
-
+	
 '''belajar descriptor'''
 # DESCRIPTOR
 #•Objek yang mengontrol akses atribut milik objek lain.
+#Descriptor bukan class biasa dan bukan model data,dia adalah mekanisme akses data
 #•Objek yg nyelip di class lain 
 #3 senjata Descriptor
 #__get__(self,instance,owner)
 #__set__(self,instance,value)
 #__delete__(self,instance)
+# self descriptor dipakai bersama semua instance
+
 '''latihan Descriptor'''
 
 class nonemptystring:
@@ -227,8 +230,10 @@ class Str:
 	def __init__(self,name):
 		self.name = name
 u = Str('Haikal') # ini benar
+print (u.name)
 #b = Str(76) # ini salah
 #u.name = 66 Ini salah
+print (Str.name) #return self nya nonemptystring
 print()
 '''latihan Descriptor 2'''
 print ('latihan descriptor')
@@ -239,7 +244,7 @@ class MaxLength:
 
 	def __set_name__(self,owner,name):
 		self.name = name
-	def __get__(self,instance,owner):
+	def __get__(self,instance,owner): # __get__ memberikan data, print() menampilkan data
 		if instance is None:
 			return self
 		return instance.__dict__.get(self.name)
@@ -420,7 +425,7 @@ class wallet :
 		self.saldo = saldo
 		self.nama = nama
 	def proses(self,transaksi): # polymorphism disini
-		self.saldo = transaksi.proses(self.saldo)
+		self.saldo = transaksi.proses(self.saldo) # ini maksudnya memanggil method objek lain,ambil hasilnya,simpan lagi
 w = wallet(8000,'Haikal')
 w2 = wallet(9000,'YaeMiko')
 s = setor(10000)

@@ -52,7 +52,7 @@ class produk:
 
   def __eq__(self,other):
     if not isinstance(other,produk):
-      return NotImplemented
+      return NotImplementedError
     return self.harga == other.harga and self.nama == other    .nama
 
   def __ne__(self,other):
@@ -107,7 +107,7 @@ class mtk():
 
   def __truediv__(self,other):
     try:
-      hasil = self.num / other.num
+      hasil = mtk(self.num / other.num)
       return mtk(hasil)
     except ZeroDivisionError:
       print ("Tidak bisa dibagi dengan 0")
@@ -187,7 +187,7 @@ class produk:
     self.harga = harga
 
   def __str__(self):
-    return f'{self.nama} = {self.harga}'
+    return f'{self.nama} : {self.harga}'
 
   def __repr__(self):
     return f'produk(Nama : "{self.nama}"\nHarga : "{self.harga}")'
@@ -235,6 +235,8 @@ a = akunbank("BRI",7766)
 b = akunbank("Mandiri",9988)
 print (f'ini adalah id a : {id(a)}')
 print (f'ini adalah id b : {id(b)}')
+print (a)
+print (b)
 print (f'apakah {a.nama} sama dengan {b.nama} : {a is b}')
 
 '''belajar context manager __enter__ dan __exit__'''
@@ -257,7 +259,7 @@ class Test:
     return False # agar error tetap dikeluarkan
 
 with Test('Soeharto')as t:
-  print (t)
+	print (t)
 print()
 '''latihan __enter__ dan __exit__ lagi'''
 print ('Latihan __enter__ dan __exit__ lagi')
@@ -283,7 +285,7 @@ class Try:
 
 with Try('HuTao') as t:
   print (t)
-  print (type(t)) # t tetap dicetak meski disini pass
+   # t tetap dicetak meski disini pass
 
 print()
 '''belajar __call__'''
@@ -311,8 +313,10 @@ class example:
   def __init__(self,*nama):
     self.nama = nama # iterable ≠ iterator
     self.batas = 0
+    
   def __len__(self):
-    return len(self.nama) # ini adalah Iterator sekali pakai
+    return len(self.nama)
+     # ini adalah Iterator sekali pakai
   def __iter__(self): # __iter__ yang bagus harus mereturn iterator baru
     return self
 
@@ -325,7 +329,7 @@ class example:
     return nama
 
 wf = example ('HuTao','Nahida','Yaemiko','Raiden')
-print (len(wf))
+print ('panjang wf adalah',len(wf))
 for a in  wf:
   print ('Aku karbit dan waifuku adalah ',a)
 
@@ -347,7 +351,7 @@ class countdown:
     nilai= self.n
     self.n-=1
     return nilai
-c = countdown(5)
+c = countdown(10)
 for a in c :
   print (a)
 
