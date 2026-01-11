@@ -1,13 +1,14 @@
 import time
-kata =[
-'ini adalah materi Dunder']
-for word in kata :
-  for wor in word :
-    print (wor,end='',flush = True)
-    time.sleep(0.1)
-  print()
-  time.sleep(0.2)
+#kata =[
+#'ini adalah materi Dunder']
+#for word in kata :
+#  for wor in word :
+#    print (wor,end='',flush = True)
+#    time.sleep(0.1)
+#  print()
+#  time.sleep(0.2)
 '''belajar __str__ dan __repr__'''
+#
 # __str__ dipakai untuk mencetak objek 
 #dengan output yang bagus
 
@@ -28,9 +29,9 @@ class user:
     return f"user(nama:'{self.nama}'\nid:'{self.id}')"
 
 user1 = user('Haikal',1707)
-print (user1)
+print ('ini adalah __str__\n',user1)
 print()
-print (repr(user1))
+print ('ini adalah __repr__\n',repr(user1))
 
 print()
 
@@ -42,6 +43,7 @@ print()
 class produk:
   def __init__(self,nama,harga):
     self.nama = nama
+    print (f'{self.nama} dibuat')
     self.harga = harga
 
   def __str__(self):
@@ -52,12 +54,14 @@ class produk:
 
   def __eq__(self,other):
     if not isinstance(other,produk):
-      return NotImplementedError
-    return self.harga == other.harga and self.nama == other    .nama
-
-  def __ne__(self,other):
-    return self.harga != other.harga
+      raise NotImplementedError
+    return self.harga == other.harga and self.nama == other.nama
     
+  def __ne__(self,other):
+    if not isinstance(other,produk):
+      raise NotImplementedError
+    return self.harga != other.harga and self.nama != other.nama
+
   def __lt__(self,other):
     return self.harga < other.harga
 
@@ -72,7 +76,7 @@ class produk:
 
 p1 = produk('Kopi',2000)
 p2 = produk('Teh',1000)
-
+#print (p1 == p3) error
 print (p1) 
 print (p2)
 print (repr(p1))
@@ -110,7 +114,6 @@ class mtk():
       hasil = mtk(self.num / other.num)
       return mtk(hasil)
     except ZeroDivisionError:
-      print ("Tidak bisa dibagi dengan 0")
       return None
       
 
@@ -121,11 +124,11 @@ a = mtk(1)
 b = mtk(2)
 c = mtk(0)
 
-print (a+b)
-print (a/c)
-print (b-a)
-print (a+b)
-print (b**c)
+print (f'hasil dari {a}+{b} adalah {a+b}')
+print (f'hasil dari {a}/{c} adalah {a/c}')
+print (f'hasil dari {b}-{a} adalah {b-a}')
+print (f'hasil dari {a}*{b} adalah {a*b}')
+print (f'hasil dari {b}**{c} adalah {b**c}')
 
 '''belajar akses data (__len__,__getitem__,__setitem__,__delitem__)'''
 print()
@@ -135,9 +138,10 @@ print()
 class bookshelf:
   def __init__ (self):
     self.shelf = []
+    print ("Rak Dibuat\n")
 
   def __str__(self):
-    return f'{self.shelf}'
+    return ','.join(self.shelf)
 
   def add (self,*buku):  #menambahkan buku ke self.shelf[]
     for b in buku:
@@ -184,6 +188,7 @@ class produk:
     print ("Objek diinisialisasi (diisi apapun) di __init__")
     print ("ini adalah id self ",id(self))
     self.nama = nama
+    print (f'{self.nama} telah dibuat')
     self.harga = harga
 
   def __str__(self):

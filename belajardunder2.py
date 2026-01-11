@@ -122,7 +122,7 @@ def otf_2(n): #dengan yield
   for a in range(1,n+1):
     yield a
 
-a = otf_2(5)
+a = otf_2(9)
 for j in a:
   print (j)
 for k in a:
@@ -196,9 +196,9 @@ for ls in b():
 #Descriptor bukan class biasa dan bukan model data,dia adalah mekanisme akses data
 #•Objek yg nyelip di class lain 
 #3 senjata Descriptor
-#__get__(self,instance,owner)
-#__set__(self,instance,value)
-#__delete__(self,instance)
+#__get__(self,instance,owner) untuk memberikan data
+#__set__(self,instance,value) untuk menyeting data
+#__delete__(self,instance) 
 # self descriptor dipakai bersama semua instance
 
 '''latihan Descriptor'''
@@ -231,9 +231,10 @@ class Str:
 		self.name = name
 u = Str('Haikal') # ini benar
 print (u.name)
+
 #b = Str(76) # ini salah
 #u.name = 66 Ini salah
-print (Str.name) #return self nya nonemptystring
+print (Str.name) #returnnya <__main__.nonemptystring object at 0x7cd0e6a4b0> (self nya nonemptystring)
 print()
 '''latihan Descriptor 2'''
 print ('latihan descriptor')
@@ -241,7 +242,6 @@ print ('latihan descriptor')
 class MaxLength:
 	def __init__(self,maxlength):
 		self.maxlength = maxlength
-
 	def __set_name__(self,owner,name):
 		self.name = name
 	def __get__(self,instance,owner): # __get__ memberikan data, print() menampilkan data
@@ -268,6 +268,98 @@ k = data('rimuru')
 print (k.name)
 k.name = 'latih'
 print (k.name)
+
+print()
+'''PENGENALAN INHERITANCE DAN POLYMORPHISM'''
+print ('Pengenalan Inheritance dan Polymorphism')
+print()
+#Inheritance : Class baru mewakili perilaku dan struktur class lama
+#MethodOverride : Class anak mengganti perilaku induk
+#Polymorphism : Satu interface banyak perilaku / cara pakai samahasil beda
+
+class kendaraan:
+
+	def jalan (self):
+		print ('kendaraan melaju')
+
+class mobil(kendaraan): # inheritance, coba ketik mobil.jalan() dan lihat hasilnya
+	pass
+
+class motor(kendaraan):
+	def jalan(self):
+		print ('motor melaju') # method override
+
+k = kendaraan()
+m = mobil()
+m2 = motor()
+k.jalan()
+m.jalan() # unik,ga ada def jalan tapi outputnya ada
+m2.jalan()
+print()
+machine = [kendaraan(),mobil(),motor()] #Polymorphism
+for mac in machine: #satu interface banyak perilaku
+	mac.jalan()
+
+'''latihan'''
+print ('latihan polymorphism dan inheritance ')
+
+class Transaksi: # ini kelas induk
+	def proses(self,saldo):
+		raise NotImplementedError ("Jangan dilewat proses() nya)")
+
+class setor(Transaksi): # 3 class adalah kelas anak
+	def __init__(self,saldo):
+		self.saldo = saldo
+		
+	def proses(self,jumlah):
+		if jumlah < 0:
+			raise ValueError ("Jumlah tidak bisa negatif")
+		return self.saldo + jumlah
+		
+class tarik(Transaksi):
+	def __init__(self,saldo):
+		self.saldo = saldo
+
+	def proses(self,jumlah):
+		if self.saldo < jumlah:
+			raise ValueError("SaldoTidakCukup")
+		return self.saldo -jumlah
+		
+class transfer(Transaksi):
+
+	def __init__(self,target,jumlah):
+		self.target = target
+		self.jumlah = jumlah
+		self.fee = 2.500
+
+	def proses (self,saldo_pengirim):
+		if saldo_pengirim < self.jumlah:
+			raise ValueError ("Saldo Tidak Cukup")
+		self.target.saldo += self.jumlah
+		print (f'Transfer {self.jumlah} ke {self.target.nama} berhasil!!!')
+		return saldo_pengirim - (self.jumlah + self.fee)
+		
+class wallet :
+
+	def __init__(self,saldo,nama):
+		self.saldo = saldo
+		self.nama = nama
+	def proses(self,transaksi): # polymorphism disini
+		self.saldo = transaksi.proses(self.saldo) # ini maksudnya memanggil method objek lain,ambil hasilnya,simpan lagi
+w = wallet(8000,'Haikal')
+w2 = wallet(9000,'YaeMiko')
+s = setor(10000)
+t = tarik(1000)
+tf = transfer(w2,1000)
+print (w.saldo)
+w.proses(s) # w.proses(setor(10000)) juga bisa
+print (w.saldo)
+print ('saldo w2 :',w2.saldo)
+w.proses(transfer(w2,60))
+print ('saldo w2 :',w2.saldo)
+
+print()
+
 '''latihan'''
 class transaksi:
 
@@ -287,9 +379,11 @@ class transaksi:
 
 
 class Dompet:
+
     def __init__(self,nama,saldo):
         self.riwayat = []
         self.nama = nama
+        print (f'Dompet {self.nama} telah dibuat')
         self.saldo = saldo
     def setor(self,value):
         self.saldo += value
@@ -329,14 +423,14 @@ class Dompet:
         return total
     def __enter__(self):
         self.saldo_awal = self.saldo
-        print ('Saldo awal : ',self.saldo_awal)
+        print (f'Saldo awal {self.nama} : {self.saldo_awal}')
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.saldo_akhir = self.saldo
         selisih = self.saldo_akhir - self.saldo_awal
-        print ('Saldo akhir :',selisih)
-        print("Selisih:", selisih)
+        print (f'Saldo akhir {self.nama} : {self.saldo_akhir}')
+        print("Selisih :", selisih)
         return False
 
         
@@ -347,93 +441,11 @@ d.tarik(86)
 d2.setor(8000)
 d2.tarik(76)
 print ('d = d2 ?',d == d2)
-print (d.transaksi_setor())
-print (d.transaksi_tarik())
-print (d2.transaksi_setor())
-print (d2.transaksi_tarik())
+print (f"Riwayat setor {d.nama} :",d.transaksi_setor())
+print (f"Riwayat tarik {d.nama} :",d.transaksi_tarik())
+print (f"Riwayat setor {d2.nama} :",d2.transaksi_setor())
+print (f"Riwayat tarik {d2.nama} :",d2.transaksi_tarik())
 
 with d as r:
   r.setor(87)
-
-print()
-'''PENGENALAN INHERITANCE DAN POLYMORPHISM'''
-print ('Pengenalan Inheritance dan Polymorphism')
-print()
-#Inheritance : Class baru mewakili perilaku dan struktur class lama
-#MethodOverride : Class anak mengganti perilaku induk
-#Polymorphism : Satu interface banyak perilaku / cara pakai samahasil beda
-
-class kendaraan:
-
-	def jalan (self):
-		print ('kendaraan melaju')
-
-class mobil(kendaraan): # inheritance, coba ketik mobil.jalan() dan lihat hasilnya
-	pass
-
-class motor(kendaraan):
-	def jalan(self):
-		print ('motor melaju') # method override
-
-k = kendaraan()
-m = mobil()
-m2 = motor()
-k.jalan()
-m.jalan() # unik,ga ada def jalan tapi outputnya ada
-m2.jalan()
-print()
-machine = [kendaraan(),mobil(),motor()] #Polymorphism
-for mac in machine: #satu interface banyak perilaku
-	mac.jalan()
-
-'''latihan'''
-print ('latihan polymorphism dan inheritance ')
-
-class Transaksi: # ink kelas induk
-	def proses(self,saldo):
-		raise NotImplementedError ("Jangan dilewat proses() nya)")
-
-class setor(Transaksi): # 3 class adalah kelas anak
-	def __init__(self,saldo):
-		self.saldo = saldo
-		
-	def proses(self,jumlah):
-		return self.saldo + jumlah
-		
-class tarik(Transaksi):
-	def __init__(self,saldo):
-		self.saldo = saldo
-
-	def proses(self,jumlah):
-		return self.saldo -jumlah
-		
-class transfer(Transaksi):
-
-	def __init__(self,target,jumlah):
-		self.target = target
-		self.jumlah = jumlah
-		self.fee = 2.500
-
-	def proses (self,saldo_pengirim):
-		self.target.saldo += self.jumlah
-		print (f'Transfer {self.jumlah} ke {self.target.nama} berhasil!!!')
-		return saldo_pengirim - (self.jumlah + self.fee)
-		
-class wallet :
-
-	def __init__(self,saldo,nama):
-		self.saldo = saldo
-		self.nama = nama
-	def proses(self,transaksi): # polymorphism disini
-		self.saldo = transaksi.proses(self.saldo) # ini maksudnya memanggil method objek lain,ambil hasilnya,simpan lagi
-w = wallet(8000,'Haikal')
-w2 = wallet(9000,'YaeMiko')
-s = setor(10000)
-t = tarik(1000)
-tf = transfer(w2,1000)
-print (w.saldo)
-w.proses(s) # w.proses(setor(10000)) juga bisa
-print (w.saldo)
-print ('saldo w2 :',w2.saldo)
-w.proses(tf)
-print ('saldo w2 :',w2.saldo)
+print (d.riwayat)
