@@ -210,8 +210,16 @@ with wallet as wl:
 '''Exception & Error design'''
 #Error : Kesalahan logika / struktur kode yang harus diperbaiki
 '''contoh Error'''
-x = 10/0 # ZeroDivisionError
-a = HuTao # NameError
+try:
+	x = 10/0
+except ZeroDivisionError as e:
+	print ("Error : ",e)
+	 # ZeroDivisionError
+
+try:
+	a = HuTao
+except Exception as e:
+	print ("Error : ",e) # NameError
 
 #Exception : Masalah yang boleh terjadi dalam dunia nyata
 '''contoh Exception :
@@ -279,3 +287,150 @@ def tarik(self,saldo):
 	return saldo - self.jumlah
 
 '''
+'''latihan'''
+
+class DompetError(Exception):
+    pass
+
+class SaldoTidakCukup(DompetError):
+    pass
+    
+class Transaksi:
+    def proses(self, saldo):
+        raise NotImplementedError
+
+    def info(self):
+        raise NotImplementedError
+class Setor(Transaksi):
+    def __init__(self, jumlah):
+        self.jumlah = jumlah
+
+    def proses(self, saldo):
+        return saldo + self.jumlah
+
+    def info(self):
+        return f"SETOR {self.jumlah}"
+class Tarik(Transaksi):
+    def __init__(self, jumlah):
+        self.jumlah = jumlah
+
+    def proses(self, saldo):
+        if saldo < self.jumlah:
+            raise SaldoTidakCukup("Saldo tidak mencukupi")
+        return saldo - self.jumlah
+
+    def info(self):
+        return f"TARIK {self.jumlah}"
+class Riwayat:
+    def __init__(self):
+        self._data = []
+
+    def tambah(self, info):
+        self._data.append(info)
+
+    def tampilkan(self):
+        return self._data.copy()
+class Dompet:
+    def __init__(self, nama, saldo):
+        self.nama = nama
+        self.saldo = saldo
+        self.riwayat = Riwayat()
+
+    def proses(self, transaksi):
+        saldo_awal = self.saldo
+        try:
+            saldo_baru = transaksi.proses(self.saldo)
+        except DompetError as e:
+            print("Transaksi gagal:", e)
+            return  # sistem berhenti rapi
+
+        # hanya jika sukses
+        self.saldo = saldo_baru
+        self.riwayat.tambah(transaksi.info())
+
+dompet = Dompet("Haikal",1000)
+try:
+	dompet.proses(Tarik(1001))
+except SaldoTidakCukup() as e:
+	print ("Error : ",e)
+
+'''gambaran kodingan asli Exception yang menjadi baseclass asli'''
+
+class BaseException:
+    def __init__(self, *args):
+        self.args = args
+
+    def __str__(self):
+        if not self.args:
+            return ""
+        if len(self.args) == 1:
+            return str(self.args[0])
+        return str(self.args)
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}{self.args}"
+
+
+class Exceptio(BaseException): # boleh pass,boleh diisi
+
+	def __init__(self,message):
+		self.message = message
+		super().__init__(message)
+'''
+• *args : semua nilai yang dibuat saat bikin Exception.
+
+raise Exceptiom("Saldo Kurang")
+"Saldo Kurang adalah *args nya,bisa dicek dengan kode dibawah
+
+• self.args[0]
+Mayoritas exception hanya memiliki 1 pesan error utama,jadi:
+args[0] adalah pesan
+str(e) pesan itu juga
+
+bisa dicek dengan kode dibawah
+
+• super().__init__(message)
+fungsinya untuk mengisi custom exception milik Exception
+
+kalau tidak pakai super()
+str(e) kosong
+args[0] kosong
+
+jadi alurnya gini,contoh
+
+class Exception('SaldoBocor')
+'SaldoBocor' masuk ke init (dia menjadi message)
+
+selanjutnya dibawahnya ada kode super().__init__(message)
+
+maksudnya:
+
+si 'SaldoBocor' dikirim ke class BaseException dan disana dia menjadi *args
+itulah kenapa args[0] isinya pesan tersebut
+'''
+
+print (Exceptio("Saldokurang").args)
+e = Exceptio("SaldoKurang")
+print(str(e)) # SaldoKurang
+print(e.args[0]) # SaldoKurang
+print(repr(e))
+print (e.__class__) #-> mengecek ,hasilnya adalah e merupakah instance dari class Exception
+print (Exceptio.__name__) #-> mengecek nama class,dan ini hanya punya class,bukan instance
+
+'''latihan'''
+
+class GudangError(Exception):
+	pass
+class BarangTidakAda(GudangError):
+	def __init__(self,nama_barang):
+		self.nama_barang = nama_barang
+		super().__init__(nama_barang)
+	def __str__(self):
+		return f"barang {self.nama_barang} tidak ditemukan"
+class StokTidakCukup(GudangError):
+	def __init__(self,stok,diminta):
+		self.stok = stok
+		self.diminta = diminta
+		
+
+raise BarangTidakAda("Laptop")
