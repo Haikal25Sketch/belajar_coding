@@ -521,6 +521,8 @@ KeyChan = Dompet("KeyChan",5000)
 Haikal.proses(Transfer(KeyChan,60))
 print (KeyChan.saldo)
 try:
-	KeyChan.proses(Transfer(Rendi,8000))
+	KeyChan.proses(Transfer(Haikal,8000))
 except DompetError as e:
 	print ("Error : ",e)
+print (Haikal.saldo)
+print (KeyChan.saldo)
