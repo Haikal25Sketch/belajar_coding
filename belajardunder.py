@@ -26,7 +26,7 @@ class user:
     return f'{self.nama} : {self.id}'
 
   def __repr__(self): # dunder ini dibuat agar print(repr()) bisa digunakan:
-    return f"user(nama:'{self.nama}'\nid:'{self.id}')"
+    return f"{self.__class__.__name__} (nama:'{self.nama}'\nid:'{self.id}')"
 
 user1 = user('Haikal',1707)
 print ('ini adalah __str__\n',user1)
@@ -50,7 +50,7 @@ class produk:
     return f'{self.nama} : {self.harga}'
 
   def __repr__(self):
-    return f"produk(nama :'{self.nama}'\nharga : '{self.harga}')"
+    return f"{self.__class__.__name__} (nama :'{self.nama}'\nharga : '{self.harga}')"
 
   def __eq__(self,other):
     if not isinstance(other,produk):
@@ -195,7 +195,7 @@ class produk:
     return f'{self.nama} : {self.harga}'
 
   def __repr__(self):
-    return f'produk(Nama : "{self.nama}"\nHarga : "{self.harga}")'
+    return f'{self.__class__.__name__} (Nama : "{self.nama}"\nHarga : "{self.harga}")'
 
   def __del__(self):
     print (f'{self.nama} dihapus dari memory')

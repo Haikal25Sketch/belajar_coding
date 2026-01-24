@@ -37,4 +37,40 @@ Bisa kembali ke masa lalu
 Bisa membandingkan perubahan
 
 Bisa bercabang tanpa rusak
-'''
+
+command git:
+•git init : untuk membuat repo di folder yang ditandai dengan .git saat kita mengeceknya dengan ls -a di folder tersebut
+
+•git status : mengecek kondisi repo saat ini,apakah ada yang berubah,ditambah,dihapus,atau ada file baru yang ditambahkan
+
+•git add . / git add nama_file : menentukan file mana yang mau dicatat
+
+•git commit : menyimpan snapshot, commit = checkpoint
+
+
+
+•git log : melihat sejarah perubahan pada file
+
+•git checkout : untuk kembali ke masa lalu,caranya:
+1.git log --oneline : untuk melihat kode commit
+
+2.git checkout <kode_commit> :  kembali ke kode yang dulu
+jika kamu kembali ke kode dulu dan melakukan perbaikan dan kamu ingin menyimpannya menjadi sebuah branch baru kamu bisa mengetik git checkout -b nama-branch-baru
+
+3.git checkout main: kembali ke masa sekarang
+
+
+•git diff : untuk melihat perbedaan atau perubahan yang terjadi pada file di dalam repositori kamu. 
+
+Jika git status hanya memberi tahu file mana yang berubah, git diff menunjukkan baris mana yang ditambah, dihapus, atau dimodifikasi secara mendetail.
+
+•git diff --staged : Untuk melihat perubahan yang sudah masuk ke area "staging" (siap untuk di-commit)
+
+git diff <kode_commit1> <kode_commit2> : memlihat apa saja yang berubahdi kedua checkpoint itu
+
+
+•git restore : untuk membatalkan perubahan pada file di folder kerjamu yang belum di-commit. caranya git restore <nama_file>
+
+
+•git revert : digunakan untuk membatalkan efek dari sebuah commit lama dengan cara membuat commit baru yang isinya adalah kebalikan dari commit tersebut. caranya git revert <kode_commit>'''
+
