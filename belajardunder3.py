@@ -43,6 +43,7 @@ class riwayat:
         self.data.append(transaksi)
     def tampilkan(self):
         return self.data.copy()
+
 class setor:
 
 	def __init__ (self,jumlah): # self.jumlah itu jumlah setor
@@ -141,8 +142,8 @@ class transaksi:
 	def __init__(self,jenis,jumlah):
 		if jenis not in ("SETOR","TARIK"):
 			raise ValueError("HANYA BISA SETOR DAN TARIK")
-		if jumlah < 0 :
-			raise ValueError ("NOMINAL HARUS POSITIF")
+		if jumlah <= 0 :
+			raise ValueError ("PERBAIKI NOMINAL")
 		self.jenis = jenis
 		self.jumlah = jumlah
 
@@ -286,7 +287,7 @@ ex benar:
 def tarik(self,saldo):
 	if saldo < self.jumlah:
 		raise SaldoTidakCukup()
-	return saldo - self.jumlah
+	return saldo - self.jumlah (hanya return jika saldo cukup)
 
 '''
 '''latihan'''
@@ -300,6 +301,7 @@ class InputError(DompetError):
 	pass
 class PenerimaError(DompetError):
 	pass
+
 class Transaksi:
     def proses(self, saldo):
         raise NotImplementedError
@@ -427,8 +429,8 @@ e = Exceptio("SaldoKurang")
 print(str(e)) # SaldoKurang
 print(e.args[0]) # SaldoKurang
 print(repr(e))
-print (e.__class__) #-> mengecek ,hasilnya adalah e merupakah instance dari class Exception
-print (Exceptio.__name__) #-> mengecek nama class,dan ini hanya punya class,bukan instance
+print ('e adalah instance dari  ',e.__class__) #-> mengecek ,hasilnya adalah e merupakah instance dari class Exception
+print ('Nama class e adalah ',Exceptio.__name__) #-> mengecek nama class,dan ini hanya punya class,bukan instance
 
 '''latihan'''
 
@@ -504,6 +506,7 @@ class Transfer(Transaksi):
 		return saldo
 
 
+
 class Dompet:
 
 	def __init__(self,nama,saldo):
@@ -514,7 +517,6 @@ class Dompet:
 		saldo_awal = self.saldo
 		saldo_baru = transaksi.proses(self.saldo)
 		self.saldo = saldo_baru
-		
 
 Haikal = Dompet("Haikal",5000)
 KeyChan = Dompet("KeyChan",5000)
@@ -526,3 +528,56 @@ except DompetError as e:
 	print ("Error : ",e)
 print (Haikal.saldo)
 print (KeyChan.saldo)
+
+'''from e'''
+class TransaksiError(DompetError):
+	pass
+
+class Transaksi:
+    def proses(self, saldo):
+        raise NotImplementedError
+
+    def info(self):
+        raise NotImplementedError
+
+class Setor(Transaksi):
+    def __init__(self, jumlah):
+        self.jumlah = jumlah
+
+    def proses(self, saldo):
+        if self.jumlah <= 0:
+        	raise InputError("Nominal Harus lebih dari 0")
+        return saldo + self.jumlah
+
+    def info(self):
+        return f"SETOR {self.jumlah}"
+
+class Tarik(Transaksi):
+    def __init__(self, jumlah):
+        self.jumlah = jumlah
+
+    def proses(self, saldo):
+        if saldo < self.jumlah:
+            raise SaldoTidakCukup("Saldo tidak mencukupi")
+        return saldo - self.jumlah
+
+    def info(self):
+        return f"TARIK {self.jumlah}"
+
+class Dompet:
+	def __init__(self,nama,saldo):
+		self.nama = nama
+		self.saldo = saldo
+
+	def proses(self,transaksi):
+		try:
+			self.saldo = transaksi.proses(self.saldo)
+		except TransaksiError as e:
+			raise DompetError (f"Transaksi Error pada dompet {self.nama}") from e
+
+HuTao = Dompet('HuTao',5000)
+try:
+	HuTao.proses(Tarik(6000))
+except DompetError as e:
+	print ("Error : ",e)
+	print ("Penyebab : ",e.__cause__)
