@@ -28,10 +28,11 @@ class iterator:
     self.n -=1
     return val
 print (rangeterbalik.__dict__)
-a = rangeterbalik(1)
-print (a.__dict__)
+a = rangeterbalik(5)
+#print (a.__dict__)
 for b in a:
   print (b)
+print()
 for x in a:
   print (x) # bisa dipakai berulang kali
 
@@ -74,7 +75,7 @@ def genap(n):
     yield current
     current +=2
 
-j = genap(70) # gabisa diulang karena
+j = genap(10) # gabisa diulang karena
 for a in j: # satu state,satu generator,satu nyawa yaitu
   print (a) # j = genap(70)
 print()
@@ -112,6 +113,7 @@ def otf(n): # tanpa yield,g ada state
   return hasil
 
 a = otf(5)
+print (a) # output list
 for h in a:
   print (h)
 for h in a:
@@ -123,6 +125,7 @@ def otf_2(n): #dengan yield
     yield a
 
 a = otf_2(9)
+print (a) # output bahasa mesin
 for j in a:
   print (j)
 for k in a:
@@ -135,9 +138,12 @@ def tes():
     yield 2
     print('selesai')
 
-
-for a in tes():
-  print (a)
+a = tes()
+#print (next(a)) gini bisa
+#print (next(a))
+#print (next(a))
+for tes in a: # gini juga bisa
+	print (tes)
 print()
 '''belajar yield from '''
 # yield from: menyambungkan mesin ke mesin lain
@@ -168,12 +174,12 @@ print()
 def a (*wife):
   for g in wife:
     print ('namaku istriku',g)
+    yield 2
     yield 3
-    yield 4
 
 def b():
+  yield 0
   yield 1
-  yield 2
   yield from a('Hutao','Raiden shogun','YaeMiko')
 
 for ls in b():
@@ -185,16 +191,16 @@ for ls in b():
 #•data besar / tak terbatas
 
 # Dan tidak cocok jika :
-#•butuh akses ulang
+#•butuh akses ulang ,karena yield itu sekali pakai
 #•butuh loncat-loncat
 #•butuh state kompleks
 #•butuh hasil lengkap cepat
-	
+
 '''belajar descriptor'''
 # DESCRIPTOR
-#•Objek yang mengontrol akses atribut milik objek lain.
-#Descriptor bukan class biasa dan bukan model data,dia adalah mekanisme akses data
-#•Objek yg nyelip di class lain 
+#•DESCRIPTOR adalah Objek yang mengontrol akses atribut milik objek lain.
+#•DESCRIPTOR  bukan class biasa dan bukan model data,dia adalah mekanisme akses data
+#•DESCRIPTOR itu Objek yg nyelip di class lain
 #3 senjata Descriptor
 #__get__(self,instance,owner) untuk memberikan data
 #__set__(self,instance,value) untuk menyeting data
@@ -202,23 +208,26 @@ for ls in b():
 # self descriptor dipakai bersama semua instance
 
 '''latihan Descriptor'''
-
+print()
+print ("Latihan Descriptor")
 class nonemptystring:
 
 	def __set_name__(self,owner,name):
 		self.name = name
 
+	def __set__(self,instance,value):
+		if not isinstance(value,str):
+			raise TypeError("Nilai harus string")
+		if value.strip() == "":
+			raise ValueError("Nilai tidak boleh kosong")
+		if len(value) >10:
+			raise ValueError("Tidak boleh lebih dari 10 karakter")
+		instance.__dict__[self.name] = value
+
 	def __get__(self,instance,owner):
 		if instance is None:
 			return self
 		return instance.__dict__.get(self.name)
-
-	def __set__(self,instance,value):
-		if not isinstance(value,str):
-			raise TypeError("Nilai harus string")
-		if  value.strip() == "":
-			raise ValueError("Nilai tidak boleh kosong")
-		instance.__dict__[self.name] = value
 
 	def __delete__(self,instance):
 		if self.name in instance.__dict__:
@@ -229,9 +238,13 @@ class Str:
 
 	def __init__(self,name):
 		self.name = name
-u = Str('Haikal') # ini benar
-print (u.name)
 
+	def ubah(self,name):
+		self.name = name
+u = Str("YaeMiko") # ini benar
+print ("Nama awal :",u.name)
+u.ubah("Lilim")
+print ("Nama setelah diubah :",u.name)
 #b = Str(76) # ini salah
 #u.name = 66 Ini salah
 print (Str.name) #returnnya <__main__.nonemptystring object at 0x7cd0e6a4b0> (self nya nonemptystring)
@@ -242,18 +255,22 @@ print ('latihan descriptor')
 class MaxLength:
 	def __init__(self,maxlength):
 		self.maxlength = maxlength
+
 	def __set_name__(self,owner,name):
 		self.name = name
-	def __get__(self,instance,owner): # __get__ memberikan data, print() menampilkan data
-		if instance is None:
-			return self
-		return instance.__dict__.get(self.name)
+
 	def __set__(self,instance,value):
 		if not isinstance(value,str):
 			raise TypeError('Nilai harus String')
 		if len(value) > self.maxlength:
 			raise TypeError ('Karakter terlalu panjang')
 		instance.__dict__[self.name] = value
+
+	def __get__(self,instance,owner): # __get__ memberikan data, print() menampilkan data
+		if instance is None:
+			return self
+		return instance.__dict__.get(self.name)
+	
 	def __delete__(self,instance):
 		if self.name in instance.__dict__:
 			del instance.__dict__[self.name]
@@ -268,7 +285,8 @@ k = data('rimuru')
 print (k.name)
 k.name = 'latih'
 print (k.name)
-
+#del k untuk delete
+print (k.name)
 print()
 '''PENGENALAN INHERITANCE DAN POLYMORPHISM'''
 print ('Pengenalan Inheritance dan Polymorphism')

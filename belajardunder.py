@@ -166,7 +166,7 @@ bs[1]='Rembulan Tenggelam di wajahmu'
 print (bs)
 del bs[1]
 print (bs)
-print ('jumlah bukunya ada : ',len(bs))
+print ('jumlah buku :',len(bs))
 print()
 
 '''belajar inisialisasi dan kontruksi (__new__,__init__,__del__)'''
@@ -190,6 +190,7 @@ class produk:
     self.nama = nama
     print (f'{self.nama} telah dibuat')
     self.harga = harga
+    print ('harga telah di set')
 
   def __str__(self):
     return f'{self.nama} : {self.harga}'
@@ -319,8 +320,6 @@ class example:
     self.nama = nama # iterable ≠ iterator
     self.batas = 0
     
-  def __len__(self):
-    return len(self.nama)
      # ini adalah Iterator sekali pakai
   def __iter__(self): # __iter__ yang bagus harus mereturn iterator baru
     return self
@@ -334,7 +333,7 @@ class example:
     return nama
 
 wf = example ('HuTao','Nahida','Yaemiko','Raiden')
-print ('panjang wf adalah',len(wf))
+print ('panjang wf adalah',len(wf.nama))
 for a in  wf:
   print ('Aku karbit dan waifuku adalah ',a)
 
@@ -430,8 +429,9 @@ a.tambah(90)
 a.tambah(80)
 a.tarik(98)
 print(a.riwayat)
-for b,c in enumerate (a):
-  print (f'transaksi ke {b+1}:{c}')
+for num,riwayat in enumerate (a):
+  print (f'transaksi ke {num+1}:{riwayat}')
 
 for genap in g: # output kosong,karena sekali pakai doang
   print(genap)
+
