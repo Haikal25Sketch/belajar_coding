@@ -176,10 +176,11 @@ print()
 #ada tahap internal dulu,yaitu __new__ diperintahkan untuk membuat objek baru yang kosong
 #barulah di __init__ akan diisi semau kita 
 #jika ingin menghapus objek,barulah __del__ berguna,tapi jarang digunakan
-class produk:
+
+class produk: # aslinya class produk(object)
   def __new__(cls,*args,**kwargs):
     print ("Membuat objek di __new__") #objek berasal dari sini
-    obj = super().__new__(cls)
+    obj = super().__new__(cls) # ini super() ke parent class yaitu object
     print ("ini adalah id obj ",id(obj))
     return obj
 
@@ -378,7 +379,7 @@ class genap:
     self.awal+=2
     return nilai
 
-g = genap(10)
+g = genap(13)
 for genap in g:
   print (genap)
 
