@@ -395,6 +395,7 @@ class Exceptio(BaseException): # boleh pass,boleh diisi
 • *args : semua nilai yang dibuat saat bikin Exception.
 
 raise Exceptio("Saldo Kurang")
+
 "Saldo Kurang adalah *args nya,bisa dicek dengan kode dibawah
 
 • self.args[0]
@@ -409,6 +410,7 @@ fungsinya untuk mengisi custom exception milik Exception
 
 kalau tidak pakai super()
 str(e) kosong
+
 args[0] kosong
 
 jadi alurnya gini,contoh
@@ -449,7 +451,7 @@ class StokTidakCukup(GudangError):
 		self.nama_barang = nama_barang
 		self.stok = stok
 		self.diminta = diminta
-		super().__init__(f"stok {self.nama_barang} tersisa {self.stok},diminta {self.diminta}")
+		super().__init__(f"stok {self.nama_barang} tidak cukup, tersisa {self.stok},diminta {self.diminta}")
 
 
 class Gudang:
