@@ -59,14 +59,15 @@ class Transfer(Transaksi):
 		self.jumlah = jumlah
 		self.fee = 2000
 	def proses (self,saldo):
-		if self.jumlah + self.fee <= 0:
+		total = self.jumlah + self.fee
+		if total <= 0:
 			raise inputerror("PERBAIKI NOMINAL!!!")
-		elif self.jumlah + self.fee > saldo :
+		elif total > saldo :
 			raise saldokurang("SALDO TIDAK CUKUP!!!")
 		if self.penerima is None:
 			raise penerimaerror("PENERIMA TIDAK ADA!!!")
 
-		saldo -=(self.jumlah + self.fee)
+		saldo -=total
 		self.penerima.saldo += self.jumlah
 		return saldo
 
@@ -88,5 +89,71 @@ print ("Saldo pertama : ",d1.saldo)
 d1.proses(Setor(10000))
 print ("Saldo kedua : ",d1.saldo)
 d1.proses(Transfer(d2,500))
-print ("Saldo ketiga : ",d1.saldo)
+print (f"Saldo ketiga,Berasal dari dompet {d1.nama} : ",d1.saldo)
 
+'''Factory Patern'''
+#Factory Patern : satu pintu untuk membuat object,yang dimana logika pembuatan objek dipisahkan dari penggunaan objek
+
+# Factory patern lahir dari masalah 'bagaimana jika sebuah permintaan itu datang bukan secara manual kita buat,tapi dari input user,config,API,atau file
+'''latihan Factory patern'''
+
+class Notifikasi(ABC):
+
+	@abstractmethod
+	def kirim(self,pesan):
+		pass
+
+class EmailNotif(Notifikasi):
+
+	def __init__(self,tujuan):
+		self.tujuan = tujuan
+
+	def kirim (self,pesan):
+		print (f"Mengirim Email ke {self.tujuan} : {pesan}")
+
+class SmsNotif(Notifikasi):
+
+	def __init__(self,tujuan):
+		self.tujuan = tujuan
+
+	def kirim (self,pesan):
+		print (f"Mengirim Sms ke {self.tujuan} : {pesan}")
+
+
+class PushNotif(Notifikasi):
+
+	def __init__(self,tujuan):
+		self.tujuan = tujuan
+
+	def kirim (self,pesan):
+		print (f"Mengirim NotifGit ke {self.tujuan} : {pesan}")
+
+
+class NotifikasiFactory:
+
+	@staticmethod
+	def buat(jenis,**data):
+		jenis = jenis.upper()
+
+		if jenis == "EMAIL":
+			return EmailNotif(data["tujuan"])
+		elif jenis == "SMS":
+			return SmsNotif(data["tujuan"])
+		elif jenis == "GIT":
+			return PushNotif(data["tujuan"])
+		else:
+			raise ValueError("Jenis notif tidak tersedia")
+
+
+jenis = input("Masukkan jenis (email/sms/git): ")
+tujuan = input("Masukkan tujuan: ")
+pesan = input("Masukkan pesan: ")
+
+notif = NotifikasiFactory.buat(
+    jenis,
+    tujuan=tujuan
+)
+
+notif.kirim(pesan)
+
+print (type(notif))
