@@ -157,3 +157,122 @@ notif = NotifikasiFactory.buat(
 notif.kirim(pesan)
 
 print (type(notif))
+print()
+'''Composition'''
+# Composition : Hubungan kepemilikan / Kerja sama
+# Inheritance : Hubungan identitas (A anak B)
+
+# Sistem Ai lebih sering menggunakan Composition dikarenakan ia adalah hasil rakitan komponen-komponen
+
+#contoh dasar : mobil memiliki mesin
+print("Ini adalah Composition")
+class mesin :
+
+	def nyala(self):
+		print ("mesin hidup")
+
+class mobil:
+
+	def __init__(self,mesin):
+		self.mesin = mesin # disini composition terjadi
+	def nyala(self):
+		self.mesin.nyala()
+
+mesin_1 = mesin()
+mobil_1 = mobil(mesin())
+mobil_1.nyala() # output mesin hidup
+
+#contoh lain 
+#Notifikasi dengan pengirim
+print()
+print ("Latihan Composition")
+class PengirimEmail:
+	def kirim(self,tujuan,pesan):
+		print (f"[Email] ke {tujuan} : {pesan}")
+
+class PengirimSms:
+	def kirim(self,tujuan,pesan):
+		print (f"[Sms] ke {tujuan} : {pesan}")
+
+class PengirimGit:
+	def kirim(self,tujuan,pesan):
+		print (f"[Git] ke {tujuan} : {pesan}")
+
+class PengirimTelegram:
+	def kirim(self,tujuan,pesan):
+		print (f"[Telegram] ke {tujuan} : {pesan}")
+
+class Notifikasi:
+	def __init__(self,tujuan,pengirim):
+		self.tujuan = tujuan
+		self.pengirim = pengirim #ini adalah composition
+
+	def kirim (self,pesan):
+		self.pengirim.kirim(self.tujuan,pesan) # sekarang self.pengirim bisa mengakses method kirim dari class lain ya
+
+
+email_sender = PengirimEmail()
+sms_sender = PengirimSms()
+git_sender = PengirimGit()
+tele_sender = PengirimTelegram()
+notif_1 = Notifikasi("Haikal",email_sender)
+notif_2 = Notifikasi ("HuTao",sms_sender)
+
+notif_1.kirim("Hai")
+notif_2.kirim("Hai Haikal")
+
+#Campur dengan Factory
+print()
+print ("Composition + Factory patern")
+class NotifikasiFactory_2:
+
+	@staticmethod
+	def buat(jenis,tujuan):
+		jenis = jenis.upper()
+
+		if jenis == "EMAIL":
+			pengirim = PengirimEmail() # pengirim disini adalah pengirim yang sama dengan parameter class Notifikasi
+		elif jenis == "SMS":
+			pengirim = PengirimSms()
+		elif jenis == "GIT":
+			pengirim = PengirimGit()
+		elif jenis == "TELE":
+			pengirim = PengirimTelegram()
+		else:
+			raise ValueError("Jenis pengirim tidak tersedia")
+
+		return Notifikasi(tujuan,pengirim)
+
+while True:
+	jenis = input("Masukkan jenis (email/sms/git/tele): ")
+	tujuan = input("Masukkan tujuan: ")
+	pesan = input("Masukkan pesan: ")
+
+	notif = NotifikasiFactory_2.buat(jenis,tujuan)
+	notif.kirim(pesan)
+
+	lanjut = input ("Lanjut atau tidak (y/n) : ")
+	if lanjut == "n" or lanjut == "N":
+		break
+
+''' agar factory patern lebih bersih dari if elif else bisa juga gini
+ class NotifikasiFactory_2:
+
+   mapping = {
+        "EMAIL": PengirimEmail,
+        "SMS": PengirimSms,
+        "GIT": PengirimGit,
+        "TELE": PengirimTelegram
+    }
+
+    @staticmethod
+    def buat(jenis, tujuan):
+        jenis = jenis.upper()
+
+        kelas_pengirim = NotifikasiFactory_2.mapping.get(jenis)
+
+        if not kelas_pengirim:
+            raise ValueError("Jenis pengirim tidak tersedia")
+
+        return Notifikasi(tujuan, kelas_pengirim()) 
+'''
