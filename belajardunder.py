@@ -110,19 +110,17 @@ class mtk():
     return mtk(self.num * other.num)
 
   def __truediv__(self,other):
-    try:
-      hasil = mtk(self.num / other.num)
-      return mtk(hasil)
-    except ZeroDivisionError:
-      return None
-      
+    hasil = mtk(self.num / other.num)
+    if other.num <= 0 :
+      raise ZeroDivisionError("Tidak bisa dibagi 0")
+    return hasil
 
   def __pow__(self,other):
     return mtk(self.num ** other.num)
     
 a = mtk(1)
 b = mtk(2)
-c = mtk(0)
+c = mtk(87)
 
 print (f'hasil dari {a}+{b} adalah {a+b}')
 print (f'hasil dari {a}/{c} adalah {a/c}')
