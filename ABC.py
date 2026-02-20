@@ -179,31 +179,34 @@ class mobil:
 		self.mesin.nyala()
 
 mesin_1 = mesin()
-mobil_1 = mobil(mesin())
+mobil_1 = mobil(mesin_1)
 mobil_1.nyala() # output mesin hidup
 
 #contoh lain 
 #Notifikasi dengan pengirim
 print()
 print ("Latihan Composition")
-class PengirimEmail:
-	def kirim(self,tujuan,pesan):
-		print (f"[Email] ke {tujuan} : {pesan}")
+class Pengirim(ABC):
+    @abstractmethod
+    def kirim(self, tujuan: str, pesan: str):
+        pass
+class PengirimEmail(Pengirim): 
+    def kirim(self, tujuan, pesan):
+        print(f"[Email] ke {tujuan} : {pesan}")
 
-class PengirimSms:
-	def kirim(self,tujuan,pesan):
-		print (f"[Sms] ke {tujuan} : {pesan}")
+class PengirimSms(Pengirim):
+    def kirim(self, tujuan, pesan):
+        print(f"[Sms] ke {tujuan} : {pesan}")
 
-class PengirimGit:
-	def kirim(self,tujuan,pesan):
-		print (f"[Git] ke {tujuan} : {pesan}")
+class PengirimGit(Pengirim):
+    def kirim(self, tujuan, pesan):
+        print(f"[Git] ke {tujuan} : {pesan}")
 
-class PengirimTelegram:
-	def kirim(self,tujuan,pesan):
-		print (f"[Telegram] ke {tujuan} : {pesan}")
-
+class PengirimTelegram(Pengirim):
+    def kirim(self, tujuan, pesan):
+        print(f"[Telegram] ke {tujuan} : {pesan}")
 class Notifikasi:
-	def __init__(self,tujuan,pengirim):
+	def __init__(self,tujuan:str,pengirim:Pengirim): # type hint agar tidak bingung
 		self.tujuan = tujuan
 		self.pengirim = pengirim #ini adalah composition
 
