@@ -1,4 +1,24 @@
 '''ABC'''
+# Abc : merupakan class dasar yang tidak boleh dibuat objeknya langsung dan berfungsi sebagai kontrak untuk subclass.
+
+# Dipakai untuk memaksa subclass mengimplementasikan method tertentu.
+
+#Kenapa perlu ABC?
+'''Supaya semua turunan punya struktur yang konsisten.
+Tanpa ABC:
+Subclass bisa lupa bikin method penting.
+Program bisa error di runtime.
+Dengan ABC:
+Python akan memaksa method tertentu ada.
+Kalau tidak, langsung error saat instansiasi.'''
+
+#Kapan Dipakai?
+'''Dipakai saat:
+Kamu ingin struktur konsisten
+Kamu ingin sistem modular
+Kamu ingin mencegah subclass tidak lengkap
+Tidak wajib selalu dipakai.'''
+
 from abc import ABC, abstractmethod
 
 class DompetError(Exception):
@@ -205,6 +225,7 @@ class PengirimGit(Pengirim):
 class PengirimTelegram(Pengirim):
     def kirim(self, tujuan, pesan):
         print(f"[Telegram] ke {tujuan} : {pesan}")
+
 class Notifikasi:
 	def __init__(self,tujuan:str,pengirim:Pengirim): # type hint agar tidak bingung
 		self.tujuan = tujuan
