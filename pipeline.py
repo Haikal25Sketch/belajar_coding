@@ -146,7 +146,7 @@ class lengthstring:
         if value.strip() == "":
             raise ValueError("Nilai tidak boleh kosong")
         if len(value) >40:
-            raise ValueError("Tidak boleh lebih dari 10 karakter")
+            raise ValueError("Tidak boleh lebih dari 40 karakter")
         instance.__dict__[self.data] = value
 
     def __get__(self,instance,owner):
@@ -182,8 +182,7 @@ print()
 class DataLoader:
 	def __init__(self,data):
 		self.data = data
-		self.batas = 0
-		
+
 	def load(self):
 		print ("Memuat data...")
 		return self.data
@@ -234,3 +233,56 @@ data = ["Data bagus","Data jelek","Data bagus","Data jelek","Data netral"]
 pipeline = Pipeline(DataLoader(data),Preprocessor(),Model(),Evaluator())
 output = pipeline.proses()
 print ("Hasil final :\n",output)
+
+print()
+'''Interface & Dependency Inversion'''
+# pipeline pertama yang gw pelajari masih bergantung pada Preprocessor,Model,Evaluator
+
+# Padahal pipeline tidak peduli dia class apa,yang penting ia memiliki method tertentu(Like polymorphism)
+
+# Contoh Loader yang mempunyai method load() dan Model dengan method prediksi() yang dibutuhkan oleh pipeline
+
+# pipeline bisa juga menggunakan function,lambda dan sejenisnya,jadi penggunaan class bisa disesuaikan dengan kebutuhan
+
+'''Pipeline dengan isi campuran'''
+import random
+class Data:
+    def __init__(self, data):
+        self.data = data
+
+    def load(self):
+        return self.data
+
+def decision(data):
+	 return [random.choice(["LULUS","TIDAK LULUS"]) for _ in data]
+
+
+def evaluation(data):
+    return {
+        "Lulus": data.count("LULUS"),
+        "Tidak Lulus": data.count("TIDAK LULUS")
+    }
+
+
+class Pipeline:
+    def __init__(self, loader, model, evaluator):
+        self.loader = loader
+        self.model = model
+        self.evaluator = evaluator
+
+    def proses(self):
+        data_mentah = self.loader.load()
+        hasil_model = self.model(data_mentah)
+        return self.evaluator(hasil_model)
+
+
+nilai = [74, 98, 76, 54, 67]
+
+pipeline = Pipeline(
+    Data(nilai),
+    decision,
+    evaluation
+)
+
+print(pipeline.proses())
+
