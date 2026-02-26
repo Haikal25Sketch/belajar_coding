@@ -67,8 +67,7 @@ print()
 class Cleaner: # mengubah teks menjadi lower case dan menghapus spasi berlebih
 	def proses (self,data):
 		print ("Memproses data ...")
-		lower = data.lower()
-		bersih = lower.strip()
+		bersih = data.lower().strip()
 		return bersih
 
 class Analyzer : # mengitung jumlah karakter dan kata dari data
@@ -87,6 +86,8 @@ class Formatter: # mwngeluarkan hasil Analyzer
 		hasil =""
 		for key,value in data.items():
 			hasil += f"\n{key} : {value}"
+
+
 		return hasil
 
 class Pipeline:
@@ -99,12 +100,11 @@ class Pipeline:
 		data_bersih = self.cleaner.proses(data)
 		hasil_model = self.analyzer.proses(data_bersih)
 		hasil_final = self.formatter.proses(hasil_model)
-
 		return hasil_final
 
-
+a = "       SAya MenCintAi HuTao sepanjang HiDup saya"
 pipeline = Pipeline(Cleaner(),Analyzer(),Formatter())
-output = pipeline.jalankan("       SAya MenCintAi HuTao sepanjang HiDup saya")
+output = pipeline.jalankan(a)
 print ("Output : ",output)
 
 print()
@@ -113,8 +113,7 @@ print()
 class Cleaner: # mengubah teks menjadi lower case dan menghapus spasi berlebih
     def proses (self,data):
         print ("Memproses data ...")
-        lower = data.lower()
-        bersih = lower.strip()
+        bersih = data.lower().strip()
         return bersih
 
 class Analyzer : # mengitung jumlah karakter dan kata dari data
@@ -190,10 +189,7 @@ class DataLoader:
 class Preprocessor:
 	def proses(self,data:list):
 		print ("Mengolah data...")
-		lower =[]
-		for word in data:
-			hasil = word.lower()
-			lower.append(hasil)
+		lower =[word.lower() for word in data]
 		return lower
 
 class Model:
@@ -245,6 +241,7 @@ print()
 # pipeline bisa juga menggunakan function,lambda dan sejenisnya,jadi penggunaan class bisa disesuaikan dengan kebutuhan
 
 '''Pipeline dengan isi campuran'''
+
 import random
 class Data:
     def __init__(self, data):
@@ -254,9 +251,13 @@ class Data:
         return self.data
 
 def decision(data):
-	 return [random.choice(["LULUS","TIDAK LULUS"]) for _ in data]
+	 hasil =[]
+	 for _ in data:
+	 	hasil.append(random.choice(["LULUS","TIDAK LULUS"]))
+	 return hasil
 
-
+#	 return [random.choice(["LULUS","TIDAK LULUS"]) for _ in data]
+# ini versi ringkasnya,artinya setiap ada satu elemen di data lakukan pemilihan acak
 def evaluation(data):
     return {
         "Lulus": data.count("LULUS"),
@@ -285,4 +286,93 @@ pipeline = Pipeline(
 )
 
 print(pipeline.proses())
+
+
+'''Random Model'''
+# Random merupakan modul bawaan python ,digunakan untuk:
+'''
+Ambil angka acak
+Pilih item acak dari list
+Acak urutan list
+Bikin nilai float antara 0 dan 1
+'''
+
+''' Method Yang sering dipakai'''
+
+# random.randint (a,b)-> angka acak dari a sampai b termasuk keduanya. ex random.randint(8,76) -> hasilnya acak
+
+# random.choice(list) -> ambil satu item acak dari list.ex random.choice(["mahal","murah"])
+
+# random.shuffle(list) -> mengacak list, mengubah list asli. ex random.shuffle(["HuTao","YaeMiko","Ai"])
+
+# random.random() -> float antara 0.0 - 1.0
+
+'''Kenapa ini penting buat AI / sistem?'''
+#Karena banyak hal butuh randomness:
+'''Split data train/test
+•Random sampling
+•Simulasi
+•Monte Carlo
+•Inisialisasi bobot model
+•Game logic
+•Decision probabilistik
+•Random itu bukan cuma buat game dadu. Itu fondasi statistik juga.'''
+
+'''Latihan random model di pipeline'''
+
+class DataLoader:
+	def __init__(self,data):
+		self.data = data
+
+	def get(self):
+		return self.data
+
+def cleaner(data):
+	return [num for num in data if isinstance(num,(int,float))]
+
+
+class Decision:
+
+	def __init__(self,prob=0.5):
+		self.prob = prob
+	def proses(self,data):
+		hasil = []
+		for num in data:
+			if num >=85:
+				hasil.append("DITERIMA")
+			elif 70 <= num <85:
+				hasil.append("DITERIMA") if random.random() < self.prob  else hasil.append("DITOLAK")
+			else :
+				hasil.append("DITOLAK")
+
+		return hasil
+
+
+
+def Hasil (data):
+	hasil = {
+	"Diterima":data.count("DITERIMA"),
+	"Ditolak":data.count("DITOLAK")
+	}
+
+	return hasil
+
+
+class Alur:
+	def __init__(self,data,clean,decision,result):
+		self.data = data
+		self.clean = clean
+		self.decision = decision
+		self.result = result
+
+	def proses (self):
+		raw_data = self.data.get()
+		cleaner =self.clean(raw_data)
+		model = self.decision.proses(cleaner)
+		hasil = self.result (model)
+		return hasil
+
+data =[76,98,65,44,56,70,98,76,55,67]
+Pipeline = Alur(DataLoader(data),cleaner,Decision(),Hasil)
+print ("Hasil penerima beasiswa : ",Pipeline.proses())
 
