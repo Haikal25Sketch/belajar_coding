@@ -319,7 +319,7 @@ Bikin nilai float antara 0 dan 1
 •Random itu bukan cuma buat game dadu. Itu fondasi statistik juga.'''
 
 '''Latihan random model di pipeline'''
-
+random.seed(8)
 class DataLoader:
 	def __init__(self,data):
 		self.data = data
@@ -375,4 +375,5 @@ class Alur:
 data =[76,98,65,44,56,70,98,76,55,67]
 Pipeline = Alur(DataLoader(data),cleaner,Decision(),Hasil)
 print ("Hasil penerima beasiswa : ",Pipeline.proses())
+
 

@@ -93,35 +93,49 @@ print()
 print ('belajar operasi matematika objek')
 print()
 
-class mtk():
-  def __init__ (self,num):
-    self.num = num
+class Mtk:
+    def __init__(self, num):
+        if not isinstance(num, (int, float)):
+            raise TypeError("Nilai harus angka")
+        self.num = num
 
-  def __str__ (self):
-    return f'{self.num}'
-    
-  def __add__ (self,other):
-    return mtk (self.num + other.num) #kalo self.num + other.num juga bisa,ini biar menghasilkan objek baru aja
+    def __str__(self):
+        return str(self.num)
 
-  def __sub__ (self,other):
-    return mtk(self.num - other.num)
+    def __repr__(self):
+        return f"Mtk({self.num})"
 
-  def __mul__ (self,other):
-    return mtk(self.num * other.num)
+    def _validate(self, other):
+        if not isinstance(other, Mtk):
+            raise TypeError("Operasi hanya bisa dengan objek Mtk")
 
-  def __truediv__(self,other):
-    hasil = mtk(self.num / other.num)
-    if other.num <= 0 :
-      raise ZeroDivisionError("Tidak bisa dibagi 0")
-    return hasil
+    def __add__(self, other):
+        if isinstance(other,(int,float)):
+            return Mtk(self.num + other)
+        self._validate(other)
+        return Mtk(self.num + other.num)
 
-  def __pow__(self,other):
-    return mtk(self.num ** other.num)
-    
-a = mtk(1)
-b = mtk(2)
-c = mtk(87)
+    def __sub__(self, other):
+        self._validate(other)
+        return Mtk(self.num - other.num)
 
+    def __mul__(self, other):
+        self._validate(other)
+        return Mtk(self.num * other.num)
+
+    def __truediv__(self, other):
+        self._validate(other)
+        if other.num == 0:
+            raise ZeroDivisionError("Tidak bisa dibagi 0")
+        return Mtk(self.num / other.num)
+
+    def __pow__(self, other):
+        self._validate(other)
+        return Mtk(self.num ** other.num)   
+a = Mtk(1)
+b = Mtk(2)
+c = Mtk(87)
+print (a+89)
 print (f'hasil dari {a}+{b} adalah {a+b}')
 print (f'hasil dari {a}/{c} adalah {a/c}')
 print (f'hasil dari {b}-{a} adalah {b-a}')
