@@ -37,8 +37,8 @@ class DataLoader:
         print ("[INFO] GET A DATA...")
         return self.data
 
-def cleaner(data):
-    print ("[INFO] CLEAN A DATA...")
+def transform (data):
+    print ("[INFO] TRANSFORM A DATA...")
     return [num / 100 for num in data]
 
 class Decision:
@@ -53,7 +53,7 @@ class Decision:
         print ("[INFO] RUNNING A MODEL...")
         hasil = []
         for num in data:
-            if num >=0.85:
+            if num >= 0.85:
                 hasil.append("DITERIMA")
             elif 0.70 <= num < 0.85:
                 hasil.append("DITERIMA") if self.num.random() < self.prob  else hasil.append("DITOLAK")
@@ -72,21 +72,21 @@ def Hasil (data):
 
 
 class Alur:
-    def __init__(self,data,clean,decision,result):
+    def __init__(self,data,transform,decision,result):
         self.data = data
-        self.clean = clean
+        self.transform = transform
         self.decision = decision
         self.result = result
 
     def proses (self):
         raw_data = self.data.get()
-        cleaner =self.clean(raw_data)
+        transformer =self.transform2(raw_data)
         model = self.decision.proses(cleaner)
         hasil = self.result (model)
         return hasil
 
 data =[76,98,65,44,56,70,98,76,55,67]
-Pipeline = Alur(DataLoader(data),cleaner,Decision(),Hasil)
+Pipeline = Alur(DataLoader(data),transform,Decision(),Hasil)
 print ("Hasil penerima beasiswa : ",Pipeline.proses())
 
 print()
@@ -154,7 +154,7 @@ Kalau sudah pernah dipanggil sekali, pemanggilan berikutnya diabaikan.
 '''Komponen utama logger
 • Logger : Otaknya
 • Handler : Jalur keluarnya
-• Formatter : Jalur Keluarnya
+• Formatter : Bentuk Outputnya
 '''
 # Handler itu yang memutuskan output akan dikeluarkan kemana,logger yang mengirim pesan
 
@@ -379,3 +379,16 @@ class Dompet:
 d1 = Dompet('Haikal',0)
 d2 = Dompet('HuTao',1000)
 d1.proses(Setor(80))
+
+#Urutan Logger
+'''
+Start -> logger.info (Info bahwa user sedang melalakukan aksi)
+Validasi -> Apakah aksinya berhasil,jika gagal logger.Error
+Success -> logger.info(user berhasil melakukan aksi
+'''
+
+# fungsi __name__ pada logging.getLogger(__name__) adalah untuk memberinama log sesuai dengan nama file,contoh pipeline.py ,nama log nya adalah pipeline
+
+# jika di proyek kecil tidak apa jika memasukkan file² kedalam 1Log,tapi jika sudah masuk tahap besar harus dilakukan pemisahan log berdasarkan levelnya dan berdasarkan modul
+
+# contoh jika filenya pipeline.py maka lognya pipeline.log 
