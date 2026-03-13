@@ -398,6 +398,15 @@ for genap in g:
 print()
 print ('latihan iter dan next 4')
 print()
+
+import logging
+logging.basicConfig(
+level = logging.INFO,
+filename = 'bank.log',
+format ="%(asctime)s | %(levelname)s | %(name)s | %(message)s"
+)
+logger = logging.getLogger(__name__)
+#Penambahan log
 class akunbank:
 
   def __init__(self,nama):
@@ -405,20 +414,28 @@ class akunbank:
     self.saldo = 0
     self.riwayat = []
     self.batas = 0
-
+    logger.info(f"{self.nama} membuat {self.__class__.__name__}")
+    
   def tambah(self,jumlah):
+    logger.info(f"{self.nama} akan menambahkan saldo,saldo lama = {self.saldo}")
     if jumlah < 0:
       print ('Tidak boleh negatif')
+      logger.error("Angka tidak boleh negatif")
     self.saldo += jumlah
     info = f'+{jumlah}'
+    logger.info(f"Saldo {self.nama} bertambah {jumlah}")
     self.riwayat.append(info)
 
   def tarik(self,jumlah):
+    logger.info(f"{self.nama} akan menarik saldo, saldo lama = {self.saldo}")
     if jumlah > self.saldo:
       print ('Saldo tidak cukup')
+      logger.error(f"Saldo tidak cukup | saldo = {self.saldo} | total tarik = {jumlah}")
     elif jumlah < 0:
       print ('Tidak boleh negatif')
+      logger.error("Angka tidak boleh negatif")
     self.saldo -= jumlah
+    logger.info(f"Saldo berkurang {jumlah} | sisa saldo = {self.saldo}")
     info = f'-{jumlah}'
     self.riwayat.append(info)
 
