@@ -413,3 +413,6 @@ request["messages"].append({
 
 for pesan in request["messages"]:
     print (f'{pesan["role"]} : {pesan["content"]}')
+
+save("latihan_request.json",request)
+save("latihan_response.json",response)
