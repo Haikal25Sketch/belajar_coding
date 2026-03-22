@@ -88,21 +88,30 @@ b = bini("HuTao",19,"Liyue")
 
 b.save("Bini.json")
 
-"""Membaca Json"""
 
 def baca(location):
     with open(location,"r") as f:
         return json.load(f)
+
+
+def save(location,data):
+    with open(location, "w") as f:
+        json.dump(data, f, indent=4)
+
+def write(location,data):
+    with open (location,"w") as f:
+        f.write(data)
+        
+"""Membaca Json"""
+
 data = baca("Bini.json")
 
 """UPDATE DATA JSON"""
 
 data["nama"] = "Lilim"
-def save(location,data):
-    with open(location, "w") as f:
-        json.dump(data, f, indent=4)
-
 save("Bini.json",data)
+
+
 b = bini("",0,"")
 b.load("Bini.json")
 print (b.nama) # -> Output masih data lama karena data sekarang belum di save,sedangkan data lama sudah di save
@@ -164,16 +173,23 @@ class anak:
                 self.hobi = data["hobi"]
 
         except FileNotFoundError as e:
-            print (f"ERROR {e}")
+            print (f"File ga ada sat : {e}")
 
         except json.JSONDecodeError as e:
-            print (f"ERROR {e}")
+            print (f"File lu rusak ngentot :{e}")
 
         except KeyError as e:
-            print (f"ERROR {e}")
+            print (f"Si bangsat,Key lu ga ada di filenya : {e}")
+            
 anak1 = anak("Sagiri",12,"Menggambar")
 anak1.save("anak.json")
 anak1.load("anak.json")
+print ("===isi dari anak.json===")
+print (anak1.nama)
+print (anak1.umur)
+print (anak1.hobi)
+
+print()
 
 anak1.load("ana.json") # test FileNotFoundError
 
@@ -203,12 +219,12 @@ data = {
 for key,value in data.items():
     if isinstance(value,dict):
         print (f"{key}: ") # -> buat key untuk nested list alamat
-        for k,v in value.items(): #-> breakdown kotq dan kode pos
+        for k,v in value.items(): #-> breakdown kota dan kode pos
             print (f"{k}:{v}")
     else:
         print (f"{key} : {value}")
 print()
-#contoh campuran
+#contoh campuran terdiri dari list dan dict
 
 response = {
     "model": "claude-sonnet",
@@ -236,3 +252,164 @@ for key,value in response.items():
 
     else:
         print (f"{key} : {value} ")
+
+
+
+
+print()
+
+data = {
+    "user": {
+        "nama": "Haikal",
+        "umur": 19,
+        "akun": [
+            {
+                "platform": "github",
+                "followers": 120
+            },
+            {
+                "platform": "twitter",
+                "followers": 500
+            }
+        ]
+    },
+    "status": "aktif"
+}
+"""UPDATE DATA"""
+
+data["user"]["akun"][0]["followers"] = 200
+save("user.json",data)
+
+
+"""SIMULASI Request and Response API"""
+#Cara buat Request
+
+request = {
+    "model": "claude-sonnet-4-20250514",  # ← AI mana yang mau dipake
+    "max_tokens": 1000,                   # ← maksimal panjang jawaban
+    "messages": [                         # ← list percakapan
+        {
+            "role": "user",               # ← yang ngomong siapa
+            "content": "Halo Claude!"     # ← isi pesannya
+        }
+    ]
+}
+
+"""
+"model"      → pilih AI nya mau yang mana
+               kayak pilih kasir McDonald's mana
+
+"max_tokens" → batas panjang jawaban
+               1 token ≈ 1 kata
+               max_tokens: 10 → jawaban pendek
+               max_tokens: 1000 → jawaban panjang
+
+"messages"   → list percakapan
+               bisa isi lebih dari 1 pesan!
+               kayak history chat
+
+
+message harus list karena pesan bisa banyak dan tiap item di list(disini dict) itu satu giliran bicara"""
+
+response = {
+    "id": "msg_123abc",
+    "type": "message",
+    "role": "assistant",
+    "model": "claude-sonnet-4-20250514",
+    "content": [
+        {
+            "type": "text",
+            "text": "Halo! Ada yang bisa dibantu?"
+        }
+    ],
+    "stop_reason": "end_turn",
+    "usage": {
+        "input_tokens": 10,
+        "output_tokens": 8
+    }
+}
+
+"""
+"id"          → nomor unik tiap percakapan
+                kayak nomor struk belanja
+
+"role"        → yang ngomong siapa
+                "assistant" = Claude yang bales
+
+"content"     → isi jawaban AI (list of dict!)
+                                ↑
+                         kamu udah tau ini! 😄
+
+"stop_reason" → kenapa AI berhenti jawab
+                "end_turn" = jawaban udah selesai
+
+"usage"       → laporan pemakaian
+                input_tokens  = panjang pertanyaan kamu
+                output_tokens = panjang jawaban AI
+"""
+
+print ("Ini pesan : ",response["content"][0]["text"])
+print ("ini model ai :",response["model"])
+total = response["usage"]["input_tokens"] + response["usage"]["output_tokens"]
+print ("total token : ",total)
+cek = response["stop_reason"]
+print ("Apakah Stop reason adalah end turn ? ",True if cek == "end_turn" else False)
+print()
+"""Simulasi penggabungan Request dam Response"""
+
+request = {
+    "model": "lilim -reinhart- 76897",
+    "max_toxens":1250,
+    "messages":[
+    {
+        "role":"user",
+        "content":"Hai,namaku Haikal"
+    }
+    ]
+}
+
+
+response = {
+    "id": "msg_123abc",
+    "type": "message",                                              "role": "assistant",
+    "model": "lilim -reinhart- 76897",
+    "content": [
+        {
+            "type": "text",
+            "text": "Halo!Aku Lilim Ai assistant.Ada yang bisa aku bantu?" }
+    ],
+    "stop_reason": "end_turn",
+    "usage": {
+        "input_tokens": 7,
+        "output_tokens": 10
+    }
+}
+
+jawaban = response["content"][0]["text"]
+model = response["model"]
+total = response["usage"]["input_tokens"]+response["usage"]["output_tokens"]
+
+print ("Pertanyaan  : ",request["messages"][0]["content"])
+print ("Jawaban     : ",jawaban)
+print ("Model       : ",model)
+print ("Total token : ",total)
+
+print()
+request["messages"].append({
+"role":"assistant",
+"content":jawaban
+}
+)
+request["messages"].append({
+"role":"user",
+"content":"Aku ingin belajar JSON"
+}
+)
+request["messages"].append({
+"role":"assistant",
+"content":"Baik akan lilim bantu sampai bisa"
+}
+)
+
+for pesan in request["messages"]:
+    print (f'{pesan["role"]} : {pesan["content"]}')
