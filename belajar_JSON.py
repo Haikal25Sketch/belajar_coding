@@ -63,6 +63,21 @@ saat file json dibaca diubah lagi jadi python object(dict)
 
 #Contoh Penggunaan sederhana
 
+def baca(location):
+    with open(location,"r") as f:
+        return json.load(f)
+
+
+def save(location,data):
+    with open(location, "w") as f:
+        json.dump(data, f, indent=4)
+
+def write(location,data):
+    with open (location,"w") as f:
+        f.write(data)
+
+
+
 class bini:
     def __init__(self,nama,umur,alamat):
         self.nama = nama
@@ -87,20 +102,6 @@ class bini:
 b = bini("HuTao",19,"Liyue")
 
 b.save("Bini.json")
-
-
-def baca(location):
-    with open(location,"r") as f:
-        return json.load(f)
-
-
-def save(location,data):
-    with open(location, "w") as f:
-        json.dump(data, f, indent=4)
-
-def write(location,data):
-    with open (location,"w") as f:
-        f.write(data)
         
 """Membaca Json"""
 
@@ -117,6 +118,8 @@ b.load("Bini.json")
 print (b.nama) # -> Output masih data lama karena data sekarang belum di save,sedangkan data lama sudah di save
 print (b.umur)
 print (b.alamat)
+
+
 
 print()
 
@@ -168,13 +171,20 @@ class anak:
         
             with open(location,"r") as f:
                 data = json.load(f)
+                # data awal
+                self.nama = None
+                self.umur = None
+                self.hobi = None
+                
+                # data diisi dari file
+
                 self.nama = data["nama"] # -> masuk ke objek
                 self.umur = data["umur"] 
                 self.hobi = data["hobi"]
 
         except FileNotFoundError as e:
             print (f"File ga ada sat : {e}")
-
+            return {} #-> kalo file ga ada return dict kosong
         except json.JSONDecodeError as e:
             print (f"File lu rusak ngentot :{e}")
 
@@ -184,13 +194,14 @@ class anak:
 anak1 = anak("Sagiri",12,"Menggambar")
 anak1.save("anak.json")
 anak1.load("anak.json")
-print ("===isi dari anak.json===")
-print (anak1.nama)
-print (anak1.umur)
-print (anak1.hobi)
+print ("===isi dari anak.json sebelum diubah ===")
+print ("nama :",anak1.nama)
+print ("umur :",anak1.umur)
+print ("hobi :",anak1.hobi)
 
 print()
 
+print ("===isi dari anak.json setelah diubah===")
 anak1.load("ana.json") # test FileNotFoundError
 
 with open("anak.json","w") as f: # test json.JSONDecodeError
@@ -199,8 +210,14 @@ anak1.load("anak.json")
 
 with open("anak.json","w") as f: # test KeyError
     json.dump({"nama":"sagiri"},f) # -> Merubah file
-anak1.load("anak.json") # Error karena ga ada umur sama hobi
-
+anak1.load("anak.json")
+anak1.save("anak.json")
+anak1.load("anak.json")
+ # Error karena ga ada umur sama hobi
+print ("nama :",anak1.nama)
+print ("umur :",anak1.umur)
+print ("hobi :",anak1.hobi)
+print()
 """Nested Json"""
 
 #Nested JSON : json di dalam json
