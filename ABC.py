@@ -37,7 +37,7 @@ class Transaksi(ABC):
 		if nominal <= 0:
 			raise inputerror("Perbaiki Nominal")
 		self.jenis = jenis
-		self.nominal = nomimal
+		self.nominal = nominal
 
 	@abstractmethod
 	def proses (self,saldo):
@@ -49,7 +49,8 @@ class Transaksi(ABC):
 
 class Tarik(Transaksi):
 	def __init__(self,jumlah):
-		self.jumlah = jumlah
+	    super().__init__("TARIK",jumlah)
+	    self.jumlah = jumlah
 
 	def proses (self,saldo):
 		if saldo < self.jumlah:
@@ -62,7 +63,8 @@ class Tarik(Transaksi):
 
 class Setor(Transaksi):
 	def __init__(self,jumlah):
-		self.jumlah = jumlah
+	    super().__init__("SETOR",jumlah)
+	    self.jumlah = jumlah
 
 	def proses (self,saldo):
 		if self.jumlah <= 0:
@@ -75,9 +77,10 @@ class Setor(Transaksi):
 class Transfer(Transaksi):
 
 	def __init__(self,penerima,jumlah):
-		self.penerima = penerima
-		self.jumlah = jumlah
-		self.fee = 2000
+	    super().__init__("TRANSFER",jumlah)
+	    self.penerima = penerima
+	    self.jumlah = jumlah
+	    self.fee = 2000
 	def proses (self,saldo):
 		total = self.jumlah + self.fee
 		if total <= 0:
@@ -102,7 +105,7 @@ class Dompet:
 	def proses(self,transaksi):
 		saldo_baru = transaksi.proses(self.saldo)
 		self.saldo = saldo_baru
-
+print ("===Latihan ABC ===")
 d1 = Dompet("Haikal",0)
 d2 = Dompet("HuTao",0)
 print ("Saldo pertama : ",d1.saldo)
@@ -111,6 +114,7 @@ print ("Saldo kedua : ",d1.saldo)
 d1.proses(Transfer(d2,500))
 print (f"Saldo ketiga,Berasal dari dompet {d1.nama} : ",d1.saldo)
 
+print()
 '''Factory Patern'''
 #Factory Patern : satu pintu untuk membuat object,yang dimana logika pembuatan objek dipisahkan dari penggunaan objek
 
@@ -164,7 +168,7 @@ class NotifikasiFactory:
 		else:
 			raise ValueError("Jenis notif tidak tersedia")
 
-
+print ("=== Latihan Factory patern ===")
 jenis = input("Masukkan jenis (email/sms/git): ")
 tujuan = input("Masukkan tujuan: ")
 pesan = input("Masukkan pesan: ")
@@ -298,5 +302,6 @@ while True:
         if not kelas_pengirim:
             raise ValueError("Jenis pengirim tidak tersedia")
 
-        return Notifikasi(tujuan, kelas_pengirim()) 
+        return Notifikasi(tujuan, kelas_pengirim) 
 '''
+

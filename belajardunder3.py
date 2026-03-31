@@ -207,7 +207,7 @@ print()
 print ("Apakah wallet dan wallet2 sama ?",wallet == wallet2)
 
 with wallet as wl:
-	wallet.proses(setor(80))
+	wl.proses(setor(80))
 
 
 '''Exception & Error design'''

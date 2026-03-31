@@ -172,7 +172,7 @@ print()
 
 def a (*wife):
   for g in wife:
-    print ('namaku istriku',g)
+    print ('nama istriku',g)
     yield 2
     yield 3
 
@@ -329,7 +329,7 @@ class setor(Transaksi): # 3 class adalah kelas anak
 		self.jumlah = jumlah
 		
 	def proses(self,saldo):
-		if jumlah <= 0:
+		if self. jumlah <= 0:
 			raise ValueError ("Perbaiki Input anda!!!")
 		return saldo + self.jumlah
 		

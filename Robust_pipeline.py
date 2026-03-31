@@ -47,7 +47,7 @@ class Decision:
         if not 0 <= prob <= 1:
             raise ValueError("Prob harus antara 0 dan 1 ")
         self.prob = prob
-        self.num = random.Random(seed) # agar hasil random bisa diulang,dan lebih baik ditaruh di dalam saja agar tidak dipakai di seluruh tugas
+        self.num = random.Random(seed) # agar hasil random bisa diulang, lebih baik ditaruh di dalam saja agar tidak dipakai di seluruh tugas
 #self.num menjadi object dari class Random
     def proses(self,data):
         print ("[INFO] RUNNING A MODEL...")
@@ -80,8 +80,8 @@ class Alur:
 
     def proses (self):
         raw_data = self.data.get()
-        transformer =self.transform2(raw_data)
-        model = self.decision.proses(cleaner)
+        transformer =self.transform(raw_data)
+        model = self.decision.proses(transformer)
         hasil = self.result (model)
         return hasil
 
@@ -127,11 +127,11 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-logging.debug("Saldo sebelum transaksi: 1000")
-logging.info("Transfer berhasil")
-logging.warning("Percobaan login gagal 3x")
-logging.error("Saldo tidak cukup")
-logging.critical("Database tidak bisa diakses")'''
+logger.debug("Saldo sebelum transaksi: 1000")
+logger.info("Transfer berhasil")
+logger.warning("Percobaan login gagal 3x")
+logger.error("Saldo tidak cukup")
+logger.critical("Database tidak bisa diakses")'''
 '''
 
 logging.basicConfig() itu untuk:
@@ -228,7 +228,7 @@ import logging
 logging.basicConfig(
     level=logging.DEBUG,
     filename="app.log",
-    format="%(asctime)s | %(levelname)s | %(message)s"
+    format="%(asctime)s | %(levelname)s | %(name)s | %(message)s"
 )
 
 logger = logging.getLogger(__name__)
@@ -379,7 +379,10 @@ class Dompet:
 d1 = Dompet('Haikal',0)
 d2 = Dompet('HuTao',1000)
 d1.proses(Setor(80))
+d2.proses(Setor(10000000))
+d2.proses(Transfer(d1,500))
 
+print (d1.saldo)
 #Urutan Logger
 '''
 Start -> logger.info (Info bahwa user sedang melalakukan aksi)
@@ -392,3 +395,5 @@ Success -> logger.info(user berhasil melakukan aksi
 # jika di proyek kecil tidak apa jika memasukkan file² kedalam 1Log,tapi jika sudah masuk tahap besar harus dilakukan pemisahan log berdasarkan levelnya dan berdasarkan modul
 
 # contoh jika filenya pipeline.py maka lognya pipeline.log 
+
+
