@@ -1,4 +1,8 @@
+import logging
 import requests
+from dotenv import load_dotenv
+import requests
+import os
 
 #API : Perantara antara user dan server
 # user minta data -> API proses -> balik data ke user
@@ -28,7 +32,7 @@ POST : Kirim data ke laci server
 """
 response itu dict karena data ,tolong pahami haikal
 """
-
+"""
 username = "Haikal25Sketch"  # github gw
 url = f"https://api.github.com/users/{username}"
 
@@ -39,7 +43,7 @@ print("Username:", data["login"])
 print("Public Repos:", data["public_repos"])
 print("Akun dibuat:", data["created_at"])
 print()
-"""latihan mengambil data repos dari github"""
+"latihan mengambil data repos dari github"
 print ("===data repos===")
 url = f"https://api.github.com/users/{username}/repos" #-> yang paling pojok adalah endpoint
 response = requests.get(url)
@@ -48,13 +52,10 @@ data = response.json()
 #repos itu list of dict ,jadi harus diunpack dulu
 for repo in data:
     print ("Repos : ",repo["name"])
-
+"""
 """belajar API key"""
 print()
 
-from dotenv import load_dotenv
-import requests
-import os
 
 load_dotenv() #-> buka dan baca file .env (file tersembunyi ,bisa dilihat di ls -a)
 token = os.getenv("GITHUB_TOKEN")
@@ -84,3 +85,96 @@ print ("OUTPUT : ")
 print (response.json())
 # Output
 {'args': {}, 'data': '{"nama": "Sagiri", "umur": 12}', 'files': {}, 'form': {}, 'headers': {'Accept': '*/*', 'Accept-Encoding': 'gzip, deflate', 'Content-Length': '30', 'Content-Type': 'application/json', 'Host': 'httpbin.org', 'User-Agent': 'python-requests/2.33.0', 'X-Amzn-Trace-Id': 'Root=1-69cb9093-6877c5c60f07e18274479a1d'}, 'json': {'nama': 'Sagiri', 'umur': 12}, 'origin': '103.121.16.127', 'url': 'https://httpbin.org/post'}
+
+print()
+
+"LATIHAN ERROR HANDLING API"
+
+#response = requests.get("https://contoh-website-yang-tidak-ada.com") -> error
+
+#print("Program selesai") # ga kecetak soalnya program berhenti
+
+
+
+try:
+    response = requests.get("https://contoh-website-yang-tidak-ada.com")
+    print ("request berhasil") #-> ini g akan keluar karena code ini berada setelah error terjadi dan di dalam try
+except:
+    print("Terjadi error!")
+
+print("Program selesai")
+
+"""jenis error dalam API yang sering terjadi"""
+
+#•ConnectionError : internet mati atau url salah total,contoh:
+#requests.get("https://urlygasalah123.com")
+
+#•HTTPError: Url bener tapi server balik error,jenisnya:
+#404 → endpoint ga ada
+response = requests.get("https://api.github.com/tidakada123")
+print ("404:", response.status_code)
+
+#401 → token salah/expired
+headers = {"Authorization": "token tokenpalsu123"}
+response = requests.get("https://api.github.com/user", headers=headers)
+print("401:", response.status_code)
+
+#403 → ga punya akses
+response = requests.get("https://api.github.com/users/ghost/settings")
+print("403:", response.status_code)
+
+#429 → spam request
+for i in range(2):
+    response = requests.get("https://api.github.com")
+print("429:", response.status_code)
+
+print()
+
+try:
+    response = requests.get("https://api.github.com/tidakada123",headers = headers)
+    response.raise_for_status() #-> fungsinya otomatis lempar error kalau status 400 keatas
+
+except requests.exceptions.HTTPError as e:
+    print (f"HTTP Error: {e}")
+
+#requests.exceptions.ConnectionError   # koneksi mati
+#requests.exceptions.Timeout           # kelamaan
+#requests.exceptions.HTTPError         # status 400+
+#requests.exceptions.JSONDecodeError   # response bukan JSON
+#requests.exceptions.RequestException  # semua
+
+
+"""Contoh penggunaan"""
+
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
+terminal = logging.StreamHandler()
+terminal.setLevel(logging.WARNING)
+stream_fmt = logging.Formatter("%(levelname)s |  %(message)s")
+terminal.setFormatter(stream_fmt)
+logger.addHandler(terminal)
+
+headers = {
+    "Authorization": f"token {token}"
+}
+def ambil_API(url):
+    try:
+        response = requests.get(url,headers = headers,timeout = 5)
+        response.raise_for_status() #-> angkat error diatas 400
+        data = response.json()
+        for key,value in data.items():
+            print (f"{key} : {value}")
+
+    except requests.exceptions.ConnectionError:
+        logger.error("KONEKSI INTERNET MATI,TIDAK BISA MENGAKSES!")
+    except requests.exceptions.Timeout:
+        logger.warning("TERLALU LAMA!!")
+
+    except requests.exceptions.HTTPError as e:
+        logger.error(f"HTTPS ERROR!!! : {e} ")
+
+    except requests.exceptions.RequestException as e :
+        logger.error(f"ERROR!!! {e} ")
+
+take = ambil_API
+take("https://api.github.com")
