@@ -9,6 +9,20 @@ import os
 
 #cara pakai:
 response = requests.get("https://api.github.com") # () tempat isi url yang menjadi Alamat API
+# isi dalam kurung GET:
+"""
+requests.get(
+    url,                    # wajib
+    headers=headers,        # kartu identitas
+    params={"page": 1,"per_page : 10},     # filter/pencarian di URL artinya tampilkan halaman 1 perhalaman 10 item(bisa diseting)
+    
+    timeout=5,              # batas waktu tunggu response,kalau lebih dari yang ditentukan ,lempar Timeout
+    verify=True,            # verifikasi SSL(Keamanan antara server dan user, itulah kenapa https lebih aman dibandigkan http karena data yang dikirim ke server dienkripsi (diubah menjadi kode acak)
+    
+)
+params otomatis jadi:
+url?page=1
+"""
 print ("response.status_code-nya adalah : ",response.status_code)
 
 #print (response.json()) INI BELUM RAPI
@@ -30,7 +44,7 @@ POST : Kirim data ke laci server
 """
 
 """
-response itu dict karena data ,tolong pahami haikal
+response itu dict karena data.json() ,tolong pahami haikal
 """
 """
 username = "Haikal25Sketch"  # github gw
@@ -54,8 +68,9 @@ for repo in data:
     print ("Repos : ",repo["name"])
 """
 """belajar API key"""
-print()
 
+print()
+#API key : kata sandi khusus yang digunakan untuk mengidentifikasi dan mengizinkan sebuah aplikasi untuk mengakses API
 
 load_dotenv() #-> buka dan baca file .env (file tersembunyi ,bisa dilihat di ls -a)
 token = os.getenv("GITHUB_TOKEN")
@@ -73,6 +88,17 @@ print("Name:", data["name"])
 
 print()
 print ("LATIHAN POST ")
+#isi post
+
+"""
+requests.post(
+    url,                    # wajib
+    headers=headers,        # informasi tambahan yang dikirim ke server,bisa sebuah identitas(token) dan format data(json atau form)
+    json=data,              # kirim data format JSON
+    data=data,              # kirim data format form
+    timeout=5,              # batas waktu tunggu
+)
+"""
 url ="https://httpbin.org/post" # -> API khusuz untuk testing yang akan mengembalikan apa yang kita kirim
 data ={
 "nama":"Sagiri",
@@ -112,31 +138,34 @@ print("Program selesai")
 #•HTTPError: Url bener tapi server balik error,jenisnya:
 #404 → endpoint ga ada
 response = requests.get("https://api.github.com/tidakada123")
-print ("404:", response.status_code)
+print ("HTTPError:", response.status_code)
 
 #401 → token salah/expired
 headers = {"Authorization": "token tokenpalsu123"}
 response = requests.get("https://api.github.com/user", headers=headers)
-print("401:", response.status_code)
+print ("Token salah :", response.status_code)
 
 #403 → ga punya akses
 response = requests.get("https://api.github.com/users/ghost/settings")
-print("403:", response.status_code)
+print("Tidak memiliki akses :", response.status_code)
 
 #429 → spam request
 for i in range(2):
     response = requests.get("https://api.github.com")
-print("429:", response.status_code)
+print("Spam requests terdeteksi:", response.status_code)
 
 print()
 
+headers = {
+    "Authorization": f"token {token}"
+}
 try:
     response = requests.get("https://api.github.com/tidakada123",headers = headers)
     response.raise_for_status() #-> fungsinya otomatis lempar error kalau status 400 keatas
 
 except requests.exceptions.HTTPError as e:
     print (f"HTTP Error: {e}")
-
+#Urutan error dari yang spesifik - umum
 #requests.exceptions.ConnectionError   # koneksi mati
 #requests.exceptions.Timeout           # kelamaan
 #requests.exceptions.HTTPError         # status 400+
