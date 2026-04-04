@@ -1,3 +1,4 @@
+import time
 """DECORATOR"""
 # menambahkan kemampuan fungsi tanpa mengubah isi fungsi tersebut
 
@@ -114,3 +115,20 @@ log_proses(proses):
         print (f"[LOG] {args[0].__class__.__name__} selesai")
         return hasil -> mengembalikan isi hasil
     return isi -> mengembalikan isi isi
+"""
+
+def waktu_ekseskusi(function):
+    def lapis(*args,**kwargs):
+        mulai = time.time()
+        hasil = function(*args,**kwargs)
+        berhenti= time.time()
+        print (f"Waktu eksekusi adalah : {berhenti-mulai} detik")
+        return hasil
+    return lapis
+
+@waktu_ekseskusi
+def pangkat(a,b):
+    return a**b
+
+hasil = pangkat
+print(hasil(30000,89))
