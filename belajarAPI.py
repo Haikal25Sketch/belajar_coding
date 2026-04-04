@@ -207,3 +207,87 @@ def ambil_API(url):
 
 take = ambil_API
 take("https://api.github.com")
+
+
+# ============================================================
+# TINGKAT LANJUT: API UNTUK AI ENGINEERING
+# ============================================================
+"""
+Sebagai AI Engineer, kamu akan sering berurusan dengan:
+1. Validasi Output (Pydantic) - Memastikan data API bersih sebelum masuk ke Model AI.
+2. Robustness (Retries) - Menangani API Model (OpenAI/HuggingFace) yang sering timeout/rate limit.
+3. Batch Processing (Async) - Mengirim banyak data sekaligus ke model.
+"""
+
+# 1. VALIDASI DATA DENGAN PYDANTIC (Sangat penting di AI!)
+# Jika data dari API kotor, model AI bisa berhalusinasi atau crash.
+try:
+    from pydantic import BaseModel, Field, ValidationError
+    from typing import List, Optional
+
+    class GithubUser(BaseModel):
+        login: str
+        id: int
+        bio: Optional[str] = "Tidak ada bio" # Default jika null
+        public_repos: int = Field(alias="public_repos")
+
+    def ambil_user_aman(username):
+        url = f"https://api.github.com/users/{username}"
+        resp = requests.get(url)
+        if resp.status_code == 200:
+            try:
+                # Validasi otomatis: jika 'id' bukan int, akan lempar error
+                user = GithubUser(**resp.json()) 
+                print(f"VALIDASI SUKSES: {user.login} punya {user.public_repos} repos.")
+                return user
+            except ValidationError as e:
+                print(f"DATA API TIDAK VALID: {e}")
+        return None
+
+    print("\n--- Testing Pydantic Validation ---")
+    ambil_user_aman("Haikal25Sketch")
+
+except ImportError:
+    print("\n[HINT] Install pydantic untuk belajar validasi data: pip install pydantic")
+
+
+# 2. HANDLING RATE LIMITS (Exponential Backoff)
+# AI API sering membatasi jumlah request per menit.
+import time
+from urllib3.util import Retry
+from requests.adapters import HTTPAdapter
+
+def session_dengan_retry():
+    session = requests.Session()
+    retry = Retry(
+        total=3,            # Coba lagi maksimal 3 kali
+        backoff_factor=1,   # Tunggu 1 detik, lalu 2, lalu 4 (exponential)
+        status_forcelist=[429, 500, 502, 503, 504], # Retry hanya jika status ini
+    )
+    adapter = HTTPAdapter(max_retries=retry)
+    session.mount("https://", adapter)
+    return session
+
+print("\n--- Testing Robust Session ---")
+s = session_dengan_retry()
+try:
+    r = s.get("https://api.github.com", timeout=5)
+    print(f"Status dengan Retry logic: {r.status_code}")
+except Exception as e:
+    print(f"Gagal setelah 3x percobaan: {e}")
+
+
+# 3. ASYNC REQUESTS (Cuplikan Konsep)
+"""
+Untuk AI Engineer, gunakan library 'httpx' untuk memanggil API secara paralel.
+Contoh (Pseudo-code):
+import asyncio
+import httpx
+
+async def panggil_model_ai(data):
+    async with httpx.AsyncClient() as client:
+        resp = await client.post("URL_MODEL", json=data)
+        return resp.json()
+
+# Ini memungkinkan kamu memanggil 100 model AI secara bersamaan!
+"""
