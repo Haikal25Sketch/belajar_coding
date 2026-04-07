@@ -8,7 +8,8 @@ class rangeterbalik:
 
   def __init__(self,n):
     self.n = n
-
+    print ("Range telah dibuat")
+    
   def __iter__(self):
     return iterator(self.n)
 
@@ -17,7 +18,7 @@ class iterator:
   def __init__(self,n):
     self.current = 0
     self.n = n
-
+    print ("Hitung mundur dimulai")
   def __iter__(self):
     return self
 
