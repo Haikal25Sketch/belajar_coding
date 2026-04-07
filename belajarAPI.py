@@ -14,7 +14,7 @@ response = requests.get("https://api.github.com") # () tempat isi url yang menja
 requests.get(
     url,                    # wajib
     headers=headers,        # kartu identitas
-    params={"page": 1,"per_page : 10},     # filter/pencarian di URL artinya tampilkan halaman 1 perhalaman 10 item(bisa diseting)
+    params={"page": 1,"per_page" : 10},     # filter/pencarian di URL artinya tampilkan halaman 1 perhalaman 10 item(bisa diseting)
     
     timeout=5,              # batas waktu tunggu response,kalau lebih dari yang ditentukan ,lempar Timeout
     verify=True,            # verifikasi SSL(Keamanan antara server dan user, itulah kenapa https lebih aman dibandigkan http karena data yang dikirim ke server dienkripsi (diubah menjadi kode acak)
@@ -22,7 +22,18 @@ requests.get(
 )
 params otomatis jadi:
 url?page=1
+params: cara kita memberikan instruksi spesifik kepada server
+  tentang data apa yang kita inginkan tanpa mengubah alamat utama (endpoint) API-nya.
+
+Biasanya digunakan untuk 4 hal utama:
+   * Filtering: "Tampilkan hanya data yang kategorinya 'elektronik'."
+   * Sorting: "Urutkan data dari yang 'termurah'."
+   * Pagination: "Tampilkan data di 'halaman 5'."
+   * Searching: "Cari data dengan kata kunci 'laptop'."
+
+
 """
+
 print ("response.status_code-nya adalah : ",response.status_code)
 
 #print (response.json()) INI BELUM RAPI
@@ -45,7 +56,7 @@ POST : Kirim data ke laci server
 
 """
 response itu dict karena data.json() ,tolong pahami haikal
-"""
+""" 
 """
 username = "Haikal25Sketch"  # github gw
 url = f"https://api.github.com/users/{username}"
