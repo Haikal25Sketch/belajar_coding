@@ -102,7 +102,7 @@ class bini:
 b = bini("HuTao",19,"Liyue")
 
 b.save("Bini.json")
-        
+
 """Membaca Json"""
 
 data = baca("Bini.json")
@@ -190,7 +190,7 @@ class anak:
 
         except KeyError as e:
             print (f"Si bangsat,Key lu ga ada di filenya : {e}")
-            
+
 anak1 = anak("Sagiri",12,"Menggambar")
 anak1.save("anak.json")
 anak1.load("anak.json")
