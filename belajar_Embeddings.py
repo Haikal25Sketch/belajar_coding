@@ -89,5 +89,5 @@ def cosine_similarity(a, b):
 print ("HuTao vs Yaemiko",round(cosine_similarity(embeddings[0],embeddings[1]),3)) #0.538 -> mirip
 print ("Yaemiko vs Nahida",round(cosine_similarity(embeddings[1],embeddings[2]),3)) #0.566 -> sedikit lebih mirip
 print ("HuTao vs Pizza",round(cosine_similarity(embeddings[0],embeddings[3]),3)) #0.161 -> jauh beda
-
+print ("HuTao vs HuTao",round(cosine_similarity(embeddings[0],embeddings[0]),3)) #0.538 -> mirip
 
