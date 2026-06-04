@@ -1,3 +1,4 @@
+
 import json
 
 def save(location,data):
@@ -30,6 +31,9 @@ class istri:
 
     def load(self,location): #-> baca file
         with open(location,"r") as f:
+            self.nama = None
+            self.umur = None
+
             data = json.load(f)
             self.nama = data["nama"]
             self.umur = data["umur"]
@@ -49,10 +53,6 @@ istri5.save("MyBini.json")
 
 data = read("MyBini.json")
 data["Sagiri"]["Hobi"] = "Menggambar"
-save("MyBini.json",data)
-data = read("MyBini.json")
 data["HuTao"]["Hobi"] = "Nawarin Kuburan"
-save("MyBini.json",data)
-data = read("MyBini.json")
 data["Klee"]["Hobi"] = "Ngebom Teyvat"
 save("MyBini.json",data)

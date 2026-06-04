@@ -20,26 +20,45 @@ def setup_logging():
 logger = setup_logging()
 
 def get_embeddings(data_list):
-    logger.info("Melakukan pemgambilan Embeddings")
+    if not data_list:
+        logger.error("Data tidak boleh kosong")
+        raise ValueError ("Data tidak boleh kosong")
+
+    logger.info("Melakukan pengambilan Embeddings")
     token = os.getenv("HUGGINGFACE_TOKEN")
 
-    url = "https://router.huggingface.co/hf-inference/models/sentence-transformers/all-MiniLM-L6-v2/pipeline/feature-extraction"
+    url = "https://router.huggingface.co/hf-inference/models/sentence-transformers/all-MiniLM-L6-v2/pipeline/feature-extraction" 
 
     headers = {
-    "Authorization":f"Bearer {token}",
-    "Content-Type":"application/json"
+        "Authorization":f"Bearer {token}",
+        "Content-Type":"application/json"
     }
 
     data={"inputs":data_list}
 
-    response = requests.post(url,headers=headers,json=data)
-    if response.status_code ==200:
-        logger.info("Koneksi ke API berhasil")
-        logger.info("Embeddings berhasil didapatkan")
-        return response.json()
-
-    else:
-        logger.error(f"Koneksi ke API gagal {response.status_code}")
+    try:
+        # Menambahkan timeout agar program tidak gantung jika koneksi lambat
+        response = requests.post(url, headers=headers, json=data, timeout=15)
+        
+        if response.status_code == 200:
+            logger.info("Koneksi ke API berhasil")
+            logger.info("Embeddings berhasil didapatkan")
+            return response.json()
+        elif response.status_code == 429:
+            logger.error("ERROR: Rate limit tercapai. Silakan tunggu sebentar.")
+            return None
+        else:
+            logger.error(f"Koneksi ke API gagal: {response.status_code} - {response.text}")
+            return None
+            
+    except requests.exceptions.Timeout:
+        logger.error("ERROR: Waktu permintaan habis (Timeout). Periksa koneksi internet.")
+        return None
+    except requests.exceptions.ConnectionError:
+        logger.error("ERROR: Gagal terhubung ke server. Periksa jaringan internet.")
+        return None
+    except Exception as e:
+        logger.error(f"ERROR TIDAK TERDUGA: {e}")
         return None
 
 def pembanding (vector_a,vector_b):
@@ -58,13 +77,18 @@ data =[
         "Saya lapar ingin makan"
 ]
 
+try:
+    embeddings_awal = get_embeddings(data)
+except Exception as e:
+    logger.error(f"Gagal memproses data awal: {e}")
+    embeddings_awal = None
 
-embeddings_awal = get_embeddings(data)
+print(f"Embeddings awal: {embeddings_awal}")
 
 if embeddings_awal:
     user_input = input("Masukkan kalimat : ")
 
-    user_embeddings = get_embeddings([user_input])[0]
+    user_embeddings = get_embeddings([user_input])[0] #->[0] untuk unpack
 
     higher = 0
     best =""

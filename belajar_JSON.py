@@ -26,7 +26,7 @@ Mirip dictionary Python, tapi disimpan di file.
 Secara sederhana:
 Python object -> JSON file :
 
-Object python yaitu seperti list int dict dan semacamnya diubah jadi format json lalu disimpan ke file
+Object python yaitu seperti list int dict dan semacamnya diubah jadi format json lalu disimpan ke file .json
 
 JSON file -> Python object :
 
@@ -55,9 +55,9 @@ saat file json dibaca diubah lagi jadi python object(dict)
 
 """Fungsi utama JSON
 •json.dump() -> untuk menyimpan dari dict ke file (tulis ke file)
-•json.load() -> untuk membaca dari file ke dict (baca dari file)
-•json.dumps() -> untuk menyimpan dari dict ke string
-•json.loads() -> untuk membaca dari file ke string
+•json.load() -> untuk membaca file.json langsung dan mengubahnya menjadi objek python 
+•json.dumps() -> untuk mengubah dari dict ke string json
+•json.loads() -> untuk membaca string yang berformat JSON lalu mengubahnya menjadi objek PYTHON
 """
 
 
@@ -93,12 +93,14 @@ class bini:
         with open(location, "w") as f:
             json.dump(data, f, indent=4) # -> Indent = 4 agar JSON rapih
     def load(self,location):
+        self.nama = None
+        self.umur = None
+        self.alamat = None
         with open(location,"r") as f:
             data = json.load(f)
             self.nama = data["nama"] # -> masuk ke objek
             self.umur = data["umur"] 
             self.alamat = data["alamat"]
-
 b = bini("HuTao",19,"Liyue")
 
 b.save("Bini.json")
@@ -109,11 +111,8 @@ data = baca("Bini.json")
 
 """UPDATE DATA JSON"""
 
-data["nama"] = "Lilim"
+data["nama"] = "Fuyuno"
 save("Bini.json",data)
-
-
-b = bini("",0,"")
 b.load("Bini.json")
 print (b.nama) # -> Output masih data lama karena data sekarang belum di save,sedangkan data lama sudah di save
 print (b.umur)
@@ -170,7 +169,7 @@ class anak:
         try:
         
             with open(location,"r") as f:
-                data = json.load(f)
+                dat = json.load(f)
                 # data awal
                 self.nama = None
                 self.umur = None
@@ -178,9 +177,9 @@ class anak:
                 
                 # data diisi dari file
 
-                self.nama = data["nama"] # -> masuk ke objek
-                self.umur = data["umur"] 
-                self.hobi = data["hobi"]
+                self.nama = dat["nama"] # -> masuk ke objek
+                self.umur = dat["umur"] 
+                self.hobi = dat["hobi"]
 
         except FileNotFoundError as e:
             print (f"File ga ada sat : {e}")
@@ -193,7 +192,6 @@ class anak:
 
 anak1 = anak("Sagiri",12,"Menggambar")
 anak1.save("anak.json")
-anak1.load("anak.json")
 print ("===isi dari anak.json sebelum diubah ===")
 print ("nama :",anak1.nama)
 print ("umur :",anak1.umur)
@@ -204,25 +202,29 @@ print()
 print ("===isi dari anak.json setelah diubah===")
 anak1.load("ana.json") # test FileNotFoundError
 
-with open("anak.json","w") as f: # test json.JSONDecodeError
-    f.write('setan') # masuk ke file
-anak1.load("anak.json") 
+#with open("anak.json","w") as f:
+ #   f.write("Setan") # test json.JSONDecodeError # masuk ke file
+data = baca("anak.json")
+data["nama"] = "YaeMiko"
+data["umur"] = None
+data["hobi"] = None
 
-with open("anak.json","w") as f: # test KeyError
-    json.dump({"nama":"sagiri"},f) # -> Merubah file
+save("anak.json",data)
 anak1.load("anak.json")
-anak1.save("anak.json")
-anak1.load("anak.json")
- # Error karena ga ada umur sama hobi
+print ("nama setelah diubah : ",anak1.nama)
+
+ #Ga Error Walau umur sama hobi None
 print ("nama :",anak1.nama)
 print ("umur :",anak1.umur)
 print ("hobi :",anak1.hobi)
+
 print()
 """Nested Json"""
 
 #Nested JSON : json di dalam json
 #contoh
-
+print()
+print ("Belajar Nested Json")
 data = {
 "nama":"sagiri",
 "umur":12,
@@ -241,7 +243,7 @@ for key,value in data.items():
     else:
         print (f"{key} : {value}")
 print()
-#contoh campuran terdiri dari list dan dict
+#contoh campuran terdiri dari list(list of dict) dan dict
 
 response = {
     "model": "claude-sonnet",

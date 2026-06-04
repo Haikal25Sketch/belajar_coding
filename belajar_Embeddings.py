@@ -28,7 +28,7 @@ print ("BELAJAR EMBEDDINGS")
 
 #Cara RAG menggunakan embeddings:
 #1. Dokumen dipecah jadi potongan kecil
-#2. Tiap potongan → diubah jadi embedding → disimpen
+#2. Tiap potongan → diubah jadi embedding → disimpan
 #3. User tanya sesuatu → pertanyaan → diubah jadi embedding
 #4. Bandingkan embedding pertanyaan vs semua embedding dokumen
 #5. Ambil yang paling mirip
@@ -89,5 +89,10 @@ def cosine_similarity(a, b):
 print ("HuTao vs Yaemiko",round(cosine_similarity(embeddings[0],embeddings[1]),3)) #0.538 -> mirip
 print ("Yaemiko vs Nahida",round(cosine_similarity(embeddings[1],embeddings[2]),3)) #0.566 -> sedikit lebih mirip
 print ("HuTao vs Pizza",round(cosine_similarity(embeddings[0],embeddings[3]),3)) #0.161 -> jauh beda
-print ("HuTao vs HuTao",round(cosine_similarity(embeddings[0],embeddings[0]),3)) #0.538 -> mirip
+print ("HuTao vs HuTao",round(cosine_similarity(embeddings[0],embeddings[0]),3)) #1.0
 
+print()
+print ("HuTao vs Yaemiko",cosine_similarity(embeddings[0],embeddings[1])) #0.538 -> mirip
+
+print()
+print (embeddings[0])

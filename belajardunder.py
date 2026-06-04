@@ -110,8 +110,6 @@ class Mtk:
             raise TypeError("Operasi hanya bisa dengan objek Mtk")
 
     def __add__(self, other):
-        if isinstance(other,(int,float)):
-            return Mtk(self.num + other)
         self._validate(other)
         return Mtk(self.num + other.num)
 
@@ -135,7 +133,7 @@ class Mtk:
 a = Mtk(1)
 b = Mtk(2)
 c = Mtk(87)
-print (a+89)
+#print (a+89) # raise ada disini
 print (f'hasil dari {a}+{b} adalah {a+b}')
 print (f'hasil dari {a}/{c} adalah {a/c}')
 print (f'hasil dari {b}-{a} adalah {b-a}')
@@ -153,11 +151,12 @@ class bookshelf:
     print ("Rak Dibuat\n")
 
   def __str__(self):
-    return ','.join(self.shelf)
+    return f"isi rak : {','.join(self.shelf)} "
 
   def add (self,*buku):  #menambahkan buku ke self.shelf[]
     for b in buku:
       self.shelf.append(b)
+      
   def __len__(self):  #mengakses panjang data
     return len(self.shelf)
 
@@ -278,7 +277,7 @@ class Test:
     return False # agar error tetap dikeluarkan
 
 with Test('Soeharto')as t:
-	print (t)
+    print (t)
 print()
 '''latihan __enter__ dan __exit__ lagi'''
 print ('Latihan __enter__ dan __exit__ lagi')

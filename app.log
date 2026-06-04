@@ -1,0 +1,28 @@
+2026-04-06 15:06:39,409 | INFO | __main__ | Dompet dibuat | nama=Haikal | saldo_awal=0
+2026-04-06 15:06:39,410 | INFO | __main__ | Dompet dibuat | nama=HuTao | saldo_awal=1000
+2026-04-06 15:06:39,410 | INFO | __main__ | Haikal menjalankan transaksi SETOR 80
+2026-04-06 15:06:39,411 | INFO | __main__ | Memproses SETOR 80
+2026-04-06 15:06:39,411 | INFO | __main__ | Setor berhasil | saldo_lama=0 | saldo_baru=80
+2026-04-06 15:06:39,411 | DEBUG | __main__ | Update saldo | lama=0 | baru=80
+2026-04-06 15:06:39,411 | INFO | __main__ | HuTao menjalankan transaksi SETOR 10000000
+2026-04-06 15:06:39,412 | INFO | __main__ | Memproses SETOR 10000000
+2026-04-06 15:06:39,412 | INFO | __main__ | Setor berhasil | saldo_lama=1000 | saldo_baru=10001000
+2026-04-06 15:06:39,412 | DEBUG | __main__ | Update saldo | lama=1000 | baru=10001000
+2026-04-06 15:06:39,412 | INFO | __main__ | HuTao menjalankan transaksi TRANSFER 500
+2026-04-06 15:06:39,412 | INFO | __main__ | Memproses TRANSFER 500 ke Haikal
+2026-04-06 15:06:39,412 | INFO | __main__ | Transfer berhasil | jumlah=500 | fee=2000 | saldo_sisa=9998500
+2026-04-06 15:06:39,413 | DEBUG | __main__ | Update saldo | lama=10001000 | baru=9998500
+2026-04-06 15:06:44,270 | INFO | __main__ | Dompet dibuat | nama=Haikal | saldo_awal=0
+2026-04-06 15:06:44,271 | INFO | __main__ | Dompet dibuat | nama=HuTao | saldo_awal=1000
+2026-04-06 15:06:44,271 | INFO | __main__ | Haikal menjalankan transaksi SETOR 80
+2026-04-06 15:06:44,271 | INFO | __main__ | Memproses SETOR 80
+2026-04-06 15:06:44,271 | INFO | __main__ | Setor berhasil | saldo_lama=0 | saldo_baru=80
+2026-04-06 15:06:44,271 | DEBUG | __main__ | Update saldo | lama=0 | baru=80
+2026-04-06 15:06:44,271 | INFO | __main__ | HuTao menjalankan transaksi SETOR 10000000
+2026-04-06 15:06:44,271 | INFO | __main__ | Memproses SETOR 10000000
+2026-04-06 15:06:44,271 | INFO | __main__ | Setor berhasil | saldo_lama=1000 | saldo_baru=10001000
+2026-04-06 15:06:44,271 | DEBUG | __main__ | Update saldo | lama=1000 | baru=10001000
+2026-04-06 15:06:44,271 | INFO | __main__ | HuTao menjalankan transaksi TRANSFER 500
+2026-04-06 15:06:44,272 | INFO | __main__ | Memproses TRANSFER 500 ke Haikal
+2026-04-06 15:06:44,272 | INFO | __main__ | Transfer berhasil | jumlah=500 | fee=2000 | saldo_sisa=9998500
+2026-04-06 15:06:44,272 | DEBUG | __main__ | Update saldo | lama=10001000 | baru=9998500

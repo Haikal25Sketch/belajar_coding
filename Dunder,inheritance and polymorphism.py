@@ -143,7 +143,7 @@ a = tes()
 #print (next(a))
 #print (next(a))
 for tes in a: # gini juga bisa
-	print (tes)
+    print (tes)
 print()
 '''belajar yield from '''
 # yield from: menyambungkan mesin ke mesin lain
@@ -212,35 +212,35 @@ print()
 print ("Latihan Descriptor")
 class nonemptystring:
 
-	def __set_name__(self,owner,name):
-		self.name = name
+    def __set_name__(self,owner,name):
+        self.name = name
 
-	def __set__(self,instance,value):
-		if not isinstance(value,str):
-			raise TypeError("Nilai harus string")
-		if value.strip() == "":
-			raise ValueError("Nilai tidak boleh kosong")
-		if len(value) >10:
-			raise ValueError("Tidak boleh lebih dari 10 karakter")
-		instance.__dict__[self.name] = value
+    def __set__(self,instance,value):
+        if not isinstance(value,str):
+            raise TypeError("Nilai harus string")
+        if value.strip() == "":
+            raise ValueError("Nilai tidak boleh kosong")
+        if len(value) >10:
+            raise ValueError("Tidak boleh lebih dari 10 karakter")
+        instance.__dict__[self.name] = value
 
-	def __get__(self,instance,owner):
-		if instance is None:
-			return self
-		return instance.__dict__.get(self.name)
+    def __get__(self,instance,owner):
+        if instance is None:
+            return self
+        return instance.__dict__.get(self.name)
 
-	def __delete__(self,instance):
-		if self.name in instance.__dict__:
-			del instance.__dict__[self.name]
+    def __delete__(self,instance):
+        if self.name in instance.__dict__:
+            del instance.__dict__[self.name]
 
 class Str:
-	name = nonemptystring()
+    name = nonemptystring()
 
-	def __init__(self,name):
-		self.name = name
+    def __init__(self,name):
+        self.name = name
 
-	def ubah(self,name):
-		self.name = name
+    def ubah(self,name):
+        self.name = name
 u = Str("YaeMiko") # ini benar
 print ("Nama awal :",u.name)
 u.ubah("Lilim")
@@ -253,33 +253,33 @@ print()
 print ('latihan descriptor')
 
 class MaxLength:
-	def __init__(self,maxlength):
-		self.maxlength = maxlength
+    def __init__(self,maxlength):
+        self.maxlength = maxlength
 
-	def __set_name__(self,owner,name):
-		self.name = name
+    def __set_name__(self,owner,name):
+        self.name = name
 
-	def __set__(self,instance,value):
-		if not isinstance(value,str):
-			raise TypeError('Nilai harus String')
-		if len(value) > self.maxlength:
-			raise TypeError ('Karakter terlalu panjang')
-		instance.__dict__[self.name] = value
+    def __set__(self,instance,value):
+        if not isinstance(value,str):
+            raise TypeError('Nilai harus String')
+        if len(value) > self.maxlength:
+            raise TypeError ('Karakter terlalu panjang')
+        instance.__dict__[self.name] = value
 
-	def __get__(self,instance,owner): # __get__ memberikan data, print() menampilkan data
-		if instance is None:
-			return self
-		return instance.__dict__.get(self.name)
-	
-	def __delete__(self,instance):
-		if self.name in instance.__dict__:
-			del instance.__dict__[self.name]
+    def __get__(self,instance,owner): # __get__ memberikan data, print() menampilkan data
+        if instance is None:
+            return self
+        return instance.__dict__.get(self.name)
+    
+    def __delete__(self,instance):
+        if self.name in instance.__dict__:
+            del instance.__dict__[self.name]
 
 class data:
-	name = MaxLength(10)
+    name = MaxLength(10)
 
-	def __init__(self,name):
-		self.name = name
+    def __init__(self,name):
+        self.name = name
 
 k = data('rimuru')
 print (k.name)
@@ -297,15 +297,15 @@ print()
 
 class kendaraan:
 
-	def jalan (self):
-		print ('kendaraan melaju')
+    def jalan (self):
+        print ('kendaraan melaju')
 
 class mobil(kendaraan): # inheritance, coba ketik mobil.jalan() dan lihat hasilnya
-	pass
+    pass
 
 class motor(kendaraan):
-	def jalan(self):
-		print ('motor melaju') # method override
+    def jalan(self):
+        print ('motor melaju') # method override
 
 k = kendaraan()
 m = mobil()
@@ -316,54 +316,54 @@ m2.jalan()
 print()
 machine = [kendaraan(),mobil(),motor()] #Polymorphism
 for mac in machine: #satu interface banyak perilaku
-	mac.jalan()
+    mac.jalan()
 
 '''latihan'''
 print ('latihan polymorphism dan inheritance ')
 
 class Transaksi: # ini kelas induk
-	def proses(self,saldo):
-		raise NotImplementedError ("Jangan dilewat proses() nya)")
+    def proses(self,saldo):
+        raise NotImplementedError ("Jangan dilewat proses() nya)")
 
 class setor(Transaksi): # 3 class adalah kelas anak
-	def __init__(self,jumlah):
-		self.jumlah = jumlah
-		
-	def proses(self,saldo):
-		if self. jumlah <= 0:
-			raise ValueError ("Perbaiki Input anda!!!")
-		return saldo + self.jumlah
-		
+    def __init__(self,jumlah):
+        self.jumlah = jumlah
+        
+    def proses(self,saldo):
+        if self. jumlah <= 0:
+            raise ValueError ("Perbaiki Input anda!!!")
+        return saldo + self.jumlah
+        
 class tarik(Transaksi):
-	def __init__(self,jumlah):
-		self.jumlah = jumlah
+    def __init__(self,jumlah):
+        self.jumlah = jumlah
 
-	def proses(self,saldo):
-		if self.jumlah > saldo:
-			raise ValueError("SaldoTidakCukup")
-		return saldo - self.jumlah
-		
+    def proses(self,saldo):
+        if self.jumlah > saldo:
+            raise ValueError("SaldoTidakCukup")
+        return saldo - self.jumlah
+        
 class transfer(Transaksi):
 
-	def __init__(self,target,jumlah):
-		self.target = target
-		self.jumlah = jumlah
-		self.fee = 2.500
+    def __init__(self,target,jumlah):
+        self.target = target
+        self.jumlah = jumlah
+        self.fee = 2.500
 
-	def proses (self,saldo_pengirim):
-		if saldo_pengirim < self.jumlah:
-			raise ValueError ("Saldo Tidak Cukup")
-		self.target.saldo += self.jumlah
-		print (f'Transfer {self.jumlah} ke {self.target.nama} berhasil!!!')
-		return saldo_pengirim - (self.jumlah + self.fee)
-		
+    def proses (self,saldo_pengirim):
+        if saldo_pengirim < self.jumlah:
+            raise ValueError ("Saldo Tidak Cukup")
+        self.target.saldo += self.jumlah
+        print (f'Transfer {self.jumlah} ke {self.target.nama} berhasil!!!')
+        return saldo_pengirim - (self.jumlah + self.fee)
+        
 class wallet :
 
-	def __init__(self,saldo,nama):
-		self.saldo = saldo
-		self.nama = nama
-	def proses(self,transaksi): # polymorphism disini
-		self.saldo = transaksi.proses(self.saldo) # ini maksudnya memanggil method objek lain,ambil hasilnya,simpan lagi
+    def __init__(self,saldo,nama):
+        self.saldo = saldo
+        self.nama = nama
+    def proses(self,transaksi): # polymorphism disini
+        self.saldo = transaksi.proses(self.saldo) # ini maksudnya memanggil method objek lain,ambil hasilnya,simpan lagi
 w = wallet(8000,'Haikal')
 w2 = wallet(9000,'YaeMiko')
 w.proses(setor(10))

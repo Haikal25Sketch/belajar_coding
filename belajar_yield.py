@@ -39,6 +39,7 @@ def train_simple_model():
     # Kita melakukan iterasi pada generator 'cleaned_data'
     # Data baru benar-benar diproses DI SINI (Lazy Evaluation)
     for suhu in cleaned_data:
+        print (suhu)
         total_suhu += suhu
         count += 1
         print(f"Memproses data ke-{count}: Suhu {suhu}°C (Diterima)")

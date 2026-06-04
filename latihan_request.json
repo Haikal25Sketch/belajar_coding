@@ -1,0 +1,22 @@
+{
+    "model": "lilim -reinhart- 76897",
+    "max_toxens": 1250,
+    "messages": [
+        {
+            "role": "user",
+            "content": "Hai,namaku Haikal"
+        },
+        {
+            "role": "assistant",
+            "content": "Halo!Aku Lilim Ai assistant.Ada yang bisa aku bantu?"
+        },
+        {
+            "role": "user",
+            "content": "Aku ingin belajar JSON"
+        },
+        {
+            "role": "assistant",
+            "content": "Baik akan lilim bantu sampai bisa"
+        }
+    ]
+}

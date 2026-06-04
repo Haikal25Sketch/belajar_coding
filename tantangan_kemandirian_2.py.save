@@ -1,0 +1,64 @@
+"""
+TANTANGAN KEMANDIRIAN 2
+Silakan isi bagian yang kosong (____) untuk melengkapi logika RAG.
+
+TOPIK:
+1. OOP & Inheritance
+2. Decorators
+3. Generators
+4. JSON Handling
+5. API Integration (HuggingFace)
+6. Math (Cosine Similarity)
+"""
+
+import json
+import time
+import requests
+import os
+import math
+from dotenv import load_dotenv
+
+load_dotenv()
+
+# 1. DECORATOR
+def hitung_waktu(func):
+    def wrapper(*args, **kwargs):
+        start = time.time()
+        result = func(*args, **kwargs)
+        end = time.time()
+        selisih = end - start
+        print ("Waktu berjalannya kode adalah : ",selisih)
+        return result
+    return wrapper
+
+# 2. OOP & GENERATOR
+class DokumenRAG:
+    def __init__(self):
+        self.db = []
+    
+    def tambah_dokumen(self, teks):
+        self.db.append(teks)
+
+    def generator_chunk(self, teks, ukuran=3):
+        kata = teks.split()
+        potongan = [ # ____ (Gunakan yield untuk memotong teks menjadi list per ukuran)
+
+# 3. API & MATH
+def get_embedding(text):
+    token = os.getenv("HUGGINGFACE_TOKEN")
+    url = "____" # Isi URL endpoint HuggingFace
+    headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
+    # ____ (Lakukan request POST ke API)
+    return response.json()
+
+def cosine_similarity(v1, v2):
+    # ____ (Implementasikan rumus cosine similarity)
+    return result
+
+# 4. INTEGRASI (MAIN)
+def main():
+    # ____ (Implementasikan alur: Input -> Embedding -> Similarity -> Print Hasil)
+    pass
+
+if __name__ == "__main__":
+    main()

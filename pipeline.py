@@ -1,3 +1,5 @@
+import logging
+
 '''Pipeline & Modular system'''
 # Pipeline = alur kerja berantai
 # contoh sederhana :
@@ -21,34 +23,48 @@ Semua itu dipisah jadi komponen.
 '''
 #contoh gambaran pipeline sederhana dalam ai
 
+def setup_logging():
+    logger = logging.getLogger()
+    logger.setLevel(logging.DEBUG)
+
+    terminal_handler = logging.StreamHandler()
+    terminal_handler.setLevel(logging.DEBUG)
+
+    stream_fmt = logging.Formatter("%(levelname)s |  %(message)s")
+    terminal_handler.setFormatter(stream_fmt)
+
+    logger.addHandler(terminal_handler)
+    return logger
+
+logger = setup_logging()
+
 class Preprocess:
-	def proses(self,data):
-		print ("Preprocessing data...")
-		return data.lower()
+    def proses(self,data):
+        logger.info("Preprocessing data...")
+        return data.lower()
 
 class Model:
-	def prediksi(self, data):
-		print ("Model memproses data...")
-		return f"Prediksi dari '{data}'"
+    def prediksi(self, data):
+        logger.info("Model memproses data...")
+        return f"Prediksi dari '{data}'"
 
 class Postprocess:
     def proses(self, hasil):
-        print("Postprocessing hasil...")
         return hasil.upper()
 
 
 class Pipeline:
-	def __init__(self,preprocess,model,postprocess): # disini composition dilakukan
-		self.preprocess = preprocess
-		self.model = model
-		self.postprocess = postprocess
+    def __init__(self,preprocess,model,postprocess):
+         # disini composition dilakukan
+        self.preprocess = preprocess
+        self.model = model
+        self.postprocess = postprocess
 
-	def jalankan(self,data): # semua tersambung lewat alur data,tapi memiliki tugasnya masing masing
-		data_bersih = self.preprocess.proses(data)
-		hasil_model = self.model.prediksi (data_bersih)
-		hasil_final = self.postprocess.proses(hasil_model)
-
-		return hasil_final
+    def jalankan(self,data): # semua tersambung lewat alur data,tapi memiliki tugasnya masing masing
+        data_bersih = self.preprocess.proses(data)
+        hasil_model = self.model.prediksi (data_bersih)
+        hasil_final = self.postprocess.proses(hasil_model)
+        return hasil_final
 
 
 # pemakaian
@@ -65,42 +81,42 @@ print()
 
 '''latihan'''
 class Cleaner: # mengubah teks menjadi lower case dan menghapus spasi berlebih
-	def proses (self,data):
-		print ("Memproses data ...")
-		bersih = data.lower().strip()
-		return bersih
+    def proses (self,data):
+        print ("Memproses data ...")
+        bersih = data.lower().strip()
+        return bersih
 
 class Analyzer : # mengitung jumlah karakter dan kata dari data
-	def proses (self,data):
-		print ("Menganalisa data ...")
-		hasil = {
-		"data": data,
-		"jumlah_karakter":len(data),
-		"jumlah_kata": len(data.split())
-		}
-		return hasil
+    def proses (self,data):
+        print ("Menganalisa data ...")
+        hasil = {
+        "data": data,
+        "jumlah_karakter":len(data),
+        "jumlah_kata": len(data.split())
+        }
+        return hasil
 
 class Formatter: # mwngeluarkan hasil Analyzer
-	def proses(self,data):
-		print ("Preprocessing hasil...")
-		hasil =""
-		for key,value in data.items():
-			hasil += f"\n{key} : {value}"
+    def proses(self,data):
+        print ("Preprocessing hasil...")
+        hasil =""
+        for key,value in data.items():
+            hasil += f"\n{key} : {value}"
 
 
-		return hasil
+        return hasil
 
 class Pipeline:
-	def __init__(self,cleaner,analyzer,formatter):
-		self.cleaner = cleaner
-		self.analyzer = analyzer
-		self.formatter = formatter
+    def __init__(self,cleaner,analyzer,formatter):
+        self.cleaner = cleaner
+        self.analyzer = analyzer
+        self.formatter = formatter
 
-	def jalankan(self,data):
-		data_bersih = self.cleaner.proses(data)
-		hasil_model = self.analyzer.proses(data_bersih)
-		hasil_final = self.formatter.proses(hasil_model)
-		return hasil_final
+    def jalankan(self,data):
+        data_bersih = self.cleaner.proses(data)
+        hasil_model = self.analyzer.proses(data_bersih)
+        hasil_final = self.formatter.proses(hasil_model)
+        return hasil_final
 
 a = "       SAya MenCintAi HuTao sepanjang HiDup saya"
 pipeline = Pipeline(Cleaner(),Analyzer(),Formatter())
@@ -109,6 +125,33 @@ print ("Output : ",output)
 
 print()
 '''pipeline + descriptor'''
+class lengthstring:
+
+    def __set_name__(self,owner,data):
+        self.data = data
+
+    def __set__(self,instance,value):
+        if not isinstance(value,str):
+            raise TypeError("Nilai harus string")
+        if value.strip() == "":
+            raise ValueError("Nilai tidak boleh kosong")
+        if len(value) >40:
+            raise ValueError("Tidak boleh lebih dari 40 karakter")
+        instance.__dict__[self.data] = value
+
+    def __get__(self,instance,owner):
+        if instance is None:
+            return self
+        return instance.__dict__.get(self.data)
+
+    def __delete__(self,instance):
+        if self.name in instance.__dict__:
+            del instance.__dict__[self.data]
+
+
+
+
+
 
 class Cleaner: # mengubah teks menjadi lower case dan menghapus spasi berlebih
     def proses (self,data):
@@ -134,28 +177,7 @@ class Formatter: # mwngeluarkan hasil Analyzer
             hasil += f"\n{key} : {value}"
         return hasil
 
-class lengthstring:
 
-    def __set_name__(self,owner,data):
-        self.data = data
-
-    def __set__(self,instance,value):
-        if not isinstance(value,str):
-            raise TypeError("Nilai harus string")
-        if value.strip() == "":
-            raise ValueError("Nilai tidak boleh kosong")
-        if len(value) >40:
-            raise ValueError("Tidak boleh lebih dari 40 karakter")
-        instance.__dict__[self.data] = value
-
-    def __get__(self,instance,owner):
-        if instance is None:
-            return self
-        return instance.__dict__.get(self.data)
-
-    def __delete__(self,instance):
-        if self.name in instance.__dict__:
-            del instance.__dict__[self.data]
 
 class Pipeline:
     data = lengthstring()
@@ -179,52 +201,52 @@ print()
 
 '''Latihan pipeline 2'''
 class DataLoader:
-	def __init__(self,data):
-		self.data = data
+    def __init__(self,data):
+        self.data = data
 
-	def load(self):
-		print ("Memuat data...")
-		return self.data
+    def load(self):
+        print ("Memuat data...")
+        return self.data
 
 class Preprocessor:
-	def proses(self,data:list):
-		print ("Mengolah data...")
-		lower =[word.lower() for word in data]
-		return lower
+    def proses(self,data:list):
+        print ("Mengolah data...")
+        lower =[word.lower() for word in data]
+        return lower
 
 class Model:
-	def prediksi(self,data:list):
-		print ("Menganalisa data...")
-		hasil = ["POSITIF" if "bagus" in x.lower() else
-		"NEGATIF" if "jelek" in x.lower() else "NETRAL"
-		for x in data]
+    def prediksi(self,data:list):
+        print ("Menganalisa data...")
+        hasil = ["POSITIF" if "bagus" in x.lower() else
+        "NEGATIF" if "jelek" in x.lower() else "NETRAL"
+        for x in data]
 
-		return hasil
+        return hasil
 
 
 class Evaluator:
-	def proses(self,data):
-		hasil = {
-		"positif":data.count("POSITIF"),
-		"negatif":data.count("NEGATIF"),
-		"netral":data.count("NETRAL")
-		}
-		return hasil
+    def proses(self,data):
+        hasil = {
+        "positif":data.count("POSITIF"),
+        "negatif":data.count("NEGATIF"),
+        "netral":data.count("NETRAL")
+        }
+        return hasil
 
 class Pipeline:
-	def __init__(self,loader,preprocess,model,evaluator):
-		self.loader = loader
-		self.preprocess = preprocess
-		self.model = model
-		self.evaluator = evaluator
+    def __init__(self,loader,preprocess,model,evaluator):
+        self.loader = loader
+        self.preprocess = preprocess
+        self.model = model
+        self.evaluator = evaluator
 
-	def proses(self):
-		data_mentah = self.loader.load()
-		data_baru = self.preprocess.proses(data_mentah)
-		hasil_model = self.model.prediksi(data_baru)
-		hasil_final = self.evaluator.proses(hasil_model)
+    def proses(self):
+        data_mentah = self.loader.load()
+        data_baru = self.preprocess.proses(data_mentah)
+        hasil_model = self.model.prediksi(data_baru)
+        hasil_final = self.evaluator.proses(hasil_model)
 
-		return hasil_final
+        return hasil_final
 data = ["Data bagus","Data jelek","Data bagus","Data jelek","Data netral"]
 pipeline = Pipeline(DataLoader(data),Preprocessor(),Model(),Evaluator())
 output = pipeline.proses()
@@ -251,12 +273,12 @@ class Data:
         return self.data
 
 def decision(data):
-	 hasil =[]
-	 for _ in data:
-	 	hasil.append(random.choice(["LULUS","TIDAK LULUS"]))
-	 return hasil
+     hasil =[]
+     for _ in data:
+        hasil.append(random.choice(["LULUS","TIDAK LULUS"]))
+     return hasil
 
-#	 return [random.choice(["LULUS","TIDAK LULUS"]) for _ in data]
+#    return [random.choice(["LULUS","TIDAK LULUS"]) for _ in data]
 # ini versi ringkasnya,artinya setiap ada satu elemen di data lakukan pemilihan acak
 def evaluation(data):
     return {
@@ -321,56 +343,56 @@ Bikin nilai float antara 0 dan 1
 '''Latihan random model di pipeline'''
 random.seed(8)
 class DataLoader:
-	def __init__(self,data):
-		self.data = data
+    def __init__(self,data):
+        self.data = data
 
-	def get(self):
-		return self.data
+    def get(self):
+        return self.data
 
 def cleaner(data):
-	return [num for num in data if isinstance(num,(int,float))]
+    return [num for num in data if isinstance(num,(int,float))]
 
 
 class Decision:
 
-	def __init__(self,prob=0.5):
-		self.prob = prob
-	def proses(self,data):
-		hasil = []
-		for num in data:
-			if num >=85:
-				hasil.append("DITERIMA")
-			elif 70 <= num <85:
-				hasil.append("DITERIMA") if random.random() < self.prob  else hasil.append("DITOLAK")
-			else :
-				hasil.append("DITOLAK")
+    def __init__(self,prob=0.5):
+        self.prob = prob
+    def proses(self,data):
+        hasil = []
+        for num in data:
+            if num >=85:
+                hasil.append("DITERIMA")
+            elif 70 <= num <85:
+                hasil.append("DITERIMA") if random.random() < self.prob  else hasil.append("DITOLAK")
+            else :
+                hasil.append("DITOLAK")
 
-		return hasil
+        return hasil
 
 
 
 def Hasil (data):
-	hasil = {
-	"Diterima":data.count("DITERIMA"),
-	"Ditolak":data.count("DITOLAK")
-	}
+    hasil = {
+    "Diterima":data.count("DITERIMA"),
+    "Ditolak":data.count("DITOLAK")
+    }
 
-	return hasil
+    return hasil
 
 
 class Alur:
-	def __init__(self,data,clean,decision,result):
-		self.data = data
-		self.clean = clean
-		self.decision = decision
-		self.result = result
+    def __init__(self,data,clean,decision,result):
+        self.data = data
+        self.clean = clean
+        self.decision = decision
+        self.result = result
 
-	def proses (self):
-		raw_data = self.data.get()
-		cleaner =self.clean(raw_data)
-		model = self.decision.proses(cleaner)
-		hasil = self.result (model)
-		return hasil
+    def proses (self):
+        raw_data = self.data.get()
+        cleaner =self.clean(raw_data)
+        model = self.decision.proses(cleaner)
+        hasil = self.result (model)
+        return hasil
 
 data =[76,98,65,44,56,70,98,76,55,67]
 Pipeline = Alur(DataLoader(data),cleaner,Decision(),Hasil)

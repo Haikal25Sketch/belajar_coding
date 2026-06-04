@@ -1,0 +1,17 @@
+{
+    "id": "msg_123abc",
+    "type": "message",
+    "role": "assistant",
+    "model": "lilim -reinhart- 76897",
+    "content": [
+        {
+            "type": "text",
+            "text": "Halo!Aku Lilim Ai assistant.Ada yang bisa aku bantu?"
+        }
+    ],
+    "stop_reason": "end_turn",
+    "usage": {
+        "input_tokens": 7,
+        "output_tokens": 10
+    }
+}

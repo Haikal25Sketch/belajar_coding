@@ -1,0 +1,17 @@
+{
+    "user": {
+        "nama": "Haikal",
+        "umur": 19,
+        "akun": [
+            {
+                "platform": "github",
+                "followers": 200
+            },
+            {
+                "platform": "twitter",
+                "followers": 500
+            }
+        ]
+    },
+    "status": "aktif"
+}

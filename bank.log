@@ -1,0 +1,33 @@
+2026-05-11 20:19:38,620 | INFO | __main__ | Haikal membuat akunbank
+2026-05-11 20:19:38,621 | INFO | __main__ | Haikal akan menambahkan saldo,saldo lama = 0
+2026-05-11 20:19:38,621 | INFO | __main__ | Saldo Haikal bertambah 1000
+2026-05-11 20:19:38,621 | INFO | __main__ | Haikal akan menarik saldo, saldo lama = 1000
+2026-05-11 20:19:38,622 | INFO | __main__ | Saldo berkurang 10 | sisa saldo = 990
+2026-05-11 20:19:38,622 | INFO | __main__ | Haikal akan menambahkan saldo,saldo lama = 990
+2026-05-11 20:19:38,622 | INFO | __main__ | Saldo Haikal bertambah 90
+2026-05-11 20:19:38,622 | INFO | __main__ | Haikal akan menambahkan saldo,saldo lama = 1080
+2026-05-11 20:19:38,622 | INFO | __main__ | Saldo Haikal bertambah 80
+2026-05-11 20:19:38,623 | INFO | __main__ | Haikal akan menarik saldo, saldo lama = 1160
+2026-05-11 20:19:38,623 | INFO | __main__ | Saldo berkurang 98 | sisa saldo = 1062
+2026-05-11 20:27:20,758 | INFO | __main__ | Haikal membuat akunbank
+2026-05-11 20:27:20,759 | INFO | __main__ | Haikal akan menambahkan saldo,saldo lama = 0
+2026-05-11 20:27:20,759 | INFO | __main__ | Saldo Haikal bertambah 1000
+2026-05-11 20:27:20,759 | INFO | __main__ | Haikal akan menarik saldo, saldo lama = 1000
+2026-05-11 20:27:20,760 | INFO | __main__ | Saldo berkurang 10 | sisa saldo = 990
+2026-05-11 20:27:20,760 | INFO | __main__ | Haikal akan menambahkan saldo,saldo lama = 990
+2026-05-11 20:27:20,760 | INFO | __main__ | Saldo Haikal bertambah 90
+2026-05-11 20:27:20,760 | INFO | __main__ | Haikal akan menambahkan saldo,saldo lama = 1080
+2026-05-11 20:27:20,760 | INFO | __main__ | Saldo Haikal bertambah 80
+2026-05-11 20:27:20,760 | INFO | __main__ | Haikal akan menarik saldo, saldo lama = 1160
+2026-05-11 20:27:20,761 | INFO | __main__ | Saldo berkurang 98 | sisa saldo = 1062
+2026-05-11 20:31:06,206 | INFO | __main__ | Haikal membuat akunbank
+2026-05-11 20:31:06,207 | INFO | __main__ | Haikal akan menambahkan saldo,saldo lama = 0
+2026-05-11 20:31:06,207 | INFO | __main__ | Saldo Haikal bertambah 1000
+2026-05-11 20:31:06,207 | INFO | __main__ | Haikal akan menarik saldo, saldo lama = 1000
+2026-05-11 20:31:06,208 | INFO | __main__ | Saldo berkurang 10 | sisa saldo = 990
+2026-05-11 20:31:06,208 | INFO | __main__ | Haikal akan menambahkan saldo,saldo lama = 990
+2026-05-11 20:31:06,208 | INFO | __main__ | Saldo Haikal bertambah 90
+2026-05-11 20:31:06,208 | INFO | __main__ | Haikal akan menambahkan saldo,saldo lama = 1080
+2026-05-11 20:31:06,208 | INFO | __main__ | Saldo Haikal bertambah 80
+2026-05-11 20:31:06,208 | INFO | __main__ | Haikal akan menarik saldo, saldo lama = 1160
+2026-05-11 20:31:06,209 | INFO | __main__ | Saldo berkurang 98 | sisa saldo = 1062

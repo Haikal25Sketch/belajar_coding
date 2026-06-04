@@ -1,5 +1,5 @@
 '''ABC'''
-# Abc : merupakan class dasar yang tidak boleh dibuat objeknya langsung dan berfungsi sebagai kontrak untuk subclass.
+# Abc : modul yang memaksa subsclass harus memiliki sesuatu yangdimiliki oleh patern class dan berfungsi sebagai kontrak untuk subclass.
 
 # Dipakai untuk memaksa subclass mengimplementasikan method tertentu.
 
@@ -22,89 +22,89 @@ Tidak wajib selalu dipakai.'''
 from abc import ABC, abstractmethod
 
 class DompetError(Exception):
-	pass
+    pass
 class saldokurang(DompetError):
-	pass
+    pass
 class inputerror(DompetError):
-	pass
+    pass
 class penerimaerror(DompetError):
-	pass
+    pass
 
 class Transaksi(ABC):
-	def __init__(self,jenis,nominal):
-		if jenis not in ("SETOR","TARIK","TRANSFER"):
-			raise inputerror("Transaksi tidak tersedia")
-		if nominal <= 0:
-			raise inputerror("Perbaiki Nominal")
-		self.jenis = jenis
-		self.nominal = nominal
+    def __init__(self,jenis,nominal):
+        if jenis not in ("SETOR","TARIK","TRANSFER"):
+            raise inputerror("Transaksi tidak tersedia")
+        if nominal <= 0:
+            raise inputerror("Perbaiki Nominal")
+        self.jenis = jenis
+        self.nominal = nominal
 
-	@abstractmethod
-	def proses (self,saldo):
-		pass
+    @abstractmethod
+    def proses (self,saldo):
+        pass
 
-	@abstractmethod
-	def info(self):
-		pass
+    @abstractmethod
+    def info(self):
+        pass
 
 class Tarik(Transaksi):
-	def __init__(self,jumlah):
-	    super().__init__("TARIK",jumlah)
-	    self.jumlah = jumlah
+    def __init__(self,nominal):
+        super().__init__("TARIK",nominal) #-> memanggil method parent yaitu init 
+        self.nominal = nominal
 
-	def proses (self,saldo):
-		if saldo < self.jumlah:
-			raise saldokurang("SALDO TIDAK CUKUP!!!")
-		return saldo - self.jumlah
+    def proses (self,saldo):
+        if saldo < self.nominal:
+            raise saldokurang("SALDO TIDAK CUKUP!!!")
+        return saldo - self.jumlah
 
-	def info(self):
-		return f"TARIK {self.jumlah}"
+    def info(self):
+        return f"TARIK {self.jumlah}"
 
 
 class Setor(Transaksi):
-	def __init__(self,jumlah):
-	    super().__init__("SETOR",jumlah)
-	    self.jumlah = jumlah
+    def __init__(self,nominal):
+        super().__init__("SETOR",nominal)
+        self.nominal = nominal
 
-	def proses (self,saldo):
-		if self.jumlah <= 0:
-			raise inputerror ("PERBAIKI NOMINAL!!!")
-		return saldo + self.jumlah
+    def proses (self,saldo):
+        if self.nominal <= 0:
+            raise inputerror ("PERBAIKI NOMINAL!!!")
+        return saldo + self.nominal
 
-	def info(self):
-		return f"SETOR {self.jumlah}"
+    def info(self):
+        return f"SETOR {self.jumlah}"
 
 class Transfer(Transaksi):
 
-	def __init__(self,penerima,jumlah):
-	    super().__init__("TRANSFER",jumlah)
-	    self.penerima = penerima
-	    self.jumlah = jumlah
-	    self.fee = 2000
-	def proses (self,saldo):
-		total = self.jumlah + self.fee
-		if total <= 0:
-			raise inputerror("PERBAIKI NOMINAL!!!")
-		elif total > saldo :
-			raise saldokurang("SALDO TIDAK CUKUP!!!")
-		if self.penerima is None:
-			raise penerimaerror("PENERIMA TIDAK ADA!!!")
+    def __init__(self,penerima,nominal):
+        super().__init__("TRANSFER",nominal)
+        self.penerima = penerima
+        self.nominal = nominal
+        self.fee = 2000
+    def proses (self,saldo):
+        total = self.nominal + self.fee
+        if total <= 0:
+            raise inputerror("PERBAIKI NOMINAL!!!")
+        elif total > saldo :
+            raise saldokurang("SALDO TIDAK CUKUP!!!")
+        if self.penerima is None:
+            raise penerimaerror("PENERIMA TIDAK ADA!!!")
 
-		saldo -=total
-		self.penerima.saldo += self.jumlah
-		return saldo
+        saldo -=total
+        self.penerima.saldo += self.nominal
+        return saldo
 
-	def info(self):
-		return f"TRANSFER {self.jumlah}"
+    def info(self):
+        return f"TRANSFER {self.nominal}"
 class Dompet:
 
-	def __init__(self,nama,saldo):
-		self.nama = nama
-		self.saldo = saldo
+    def __init__(self,nama,saldo):
+        self.nama = nama
+        self.saldo = saldo
 
-	def proses(self,transaksi):
-		saldo_baru = transaksi.proses(self.saldo)
-		self.saldo = saldo_baru
+    def proses(self,transaksi):
+        saldo_baru = transaksi.proses(self.saldo) #-> composition
+        self.saldo = saldo_baru
 print ("===Latihan ABC ===")
 d1 = Dompet("Haikal",0)
 d2 = Dompet("HuTao",0)
@@ -123,52 +123,53 @@ print()
 
 class Notifikasi(ABC):
 
-	@abstractmethod
-	def kirim(self,pesan):
-		pass
+    @abstractmethod
+    def kirim(self,pesan):
+        pass
 
 class EmailNotif(Notifikasi):
 
-	def __init__(self,tujuan):
-		self.tujuan = tujuan
+    def __init__(self,tujuan):
+        self.tujuan = tujuan
 
-	def kirim (self,pesan):
-		print (f"Mengirim Email ke {self.tujuan} : {pesan}")
+    def kirim (self,pesan):
+        print (f"Mengirim Email ke {self.tujuan} : {pesan}")
 
 class SmsNotif(Notifikasi):
 
-	def __init__(self,tujuan):
-		self.tujuan = tujuan
+    def __init__(self,tujuan):
+        self.tujuan = tujuan
 
-	def kirim (self,pesan):
-		print (f"Mengirim Sms ke {self.tujuan} : {pesan}")
+    def kirim (self,pesan):
+        print (f"Mengirim Sms ke {self.tujuan} : {pesan}")
 
 
 class PushNotif(Notifikasi):
 
-	def __init__(self,tujuan):
-		self.tujuan = tujuan
+    def __init__(self,tujuan):
+        self.tujuan = tujuan
 
-	def kirim (self,pesan):
-		print (f"Mengirim NotifGit ke {self.tujuan} : {pesan}")
+    def kirim (self,pesan):
+        print (f"Mengirim NotifGit ke {self.tujuan} : {pesan}")
 
 
 class NotifikasiFactory:
 
-	@staticmethod
-	def buat(jenis,**data):
-		jenis = jenis.upper()
+    @staticmethod
+    def buat(jenis,**data):
+        jenis = jenis.upper()
 
-		if jenis == "EMAIL":
-			return EmailNotif(data["tujuan"])
-		elif jenis == "SMS":
-			return SmsNotif(data["tujuan"])
-		elif jenis == "GIT":
-			return PushNotif(data["tujuan"])
-		else:
-			raise ValueError("Jenis notif tidak tersedia")
+        if jenis == "EMAIL":
+            return EmailNotif(data["tujuan"])
+        elif jenis == "SMS":
+            return SmsNotif(data["tujuan"])
+        elif jenis == "GIT":
+            return PushNotif(data["tujuan"])
+        else:
+            raise ValueError("Jenis notif tidak tersedia")
 
 print ("=== Latihan Factory patern ===")
+
 jenis = input("Masukkan jenis (email/sms/git): ")
 tujuan = input("Masukkan tujuan: ")
 pesan = input("Masukkan pesan: ")
@@ -176,11 +177,12 @@ pesan = input("Masukkan pesan: ")
 notif = NotifikasiFactory.buat(
     jenis,
     tujuan=tujuan
-)
+ )
 
 notif.kirim(pesan)
 
-print (type(notif))
+print ("Type notif adalah",type(notif))
+
 print()
 '''Composition'''
 # Composition : Hubungan kepemilikan / Kerja sama
@@ -192,15 +194,15 @@ print()
 print("Ini adalah Composition")
 class mesin :
 
-	def nyala(self):
-		print ("mesin hidup")
+    def nyala(self):
+        print ("mesin hidup")
 
 class mobil:
 
-	def __init__(self,mesin):
-		self.mesin = mesin # disini composition terjadi
-	def nyala(self):
-		self.mesin.nyala()
+    def __init__(self,mesin):
+        self.mesin = mesin # disini composition terjadi
+    def nyala(self):
+        self.mesin.nyala()
 
 mesin_1 = mesin()
 mobil_1 = mobil(mesin_1)
@@ -231,12 +233,12 @@ class PengirimTelegram(Pengirim):
         print(f"[Telegram] ke {tujuan} : {pesan}")
 
 class Notifikasi:
-	def __init__(self,tujuan:str,pengirim:Pengirim): # type hint agar tidak bingung
-		self.tujuan = tujuan
-		self.pengirim = pengirim #ini adalah composition
+    def __init__(self,tujuan:str,pengirim:Pengirim): # type hint agar tidak bingung
+        self.tujuan = tujuan
+        self.pengirim = pengirim #ini adalah composition
 
-	def kirim (self,pesan):
-		self.pengirim.kirim(self.tujuan,pesan) # sekarang self.pengirim bisa mengakses method kirim dari class lain ya
+    def kirim (self,pesan):
+        self.pengirim.kirim(self.tujuan,pesan) # sekarang self.pengirim bisa mengakses method kirim dari class lain ya
 
 
 email_sender = PengirimEmail()
@@ -247,42 +249,53 @@ notif_1 = Notifikasi("Haikal",email_sender)
 notif_2 = Notifikasi ("HuTao",sms_sender)
 
 notif_1.kirim("Hai")
-notif_2.kirim("Hai Haikal")
+notif_2.kirim(f"Hai {notif_2.tujuan}ku")
 
 #Campur dengan Factory
 print()
 print ("Composition + Factory patern")
+#Biar ga pusing gw copy aja hehe
+class Notifikasi:
+    def __init__(self,tujuan:str,pengirim:Pengirim): # type hint agar tidak bingung
+        self.tujuan = tujuan
+        self.pengirim = pengirim #ini adalah composition
+
+    def kirim (self,pesan):
+        self.pengirim.kirim(self.tujuan,pesan) # sekarang self.pengirim bisa mengakses method kirim dari class lain ya
+
 class NotifikasiFactory_2:
 
-	@staticmethod
-	def buat(jenis,tujuan):
-		jenis = jenis.upper()
-
-		if jenis == "EMAIL":
-			pengirim = PengirimEmail() # pengirim disini adalah pengirim yang sama dengan parameter class Notifikasi
-		elif jenis == "SMS":
-			pengirim = PengirimSms()
-		elif jenis == "GIT":
-			pengirim = PengirimGit()
-		elif jenis == "TELE":
-			pengirim = PengirimTelegram()
-		else:
-			raise ValueError("Jenis pengirim tidak tersedia")
-
-		return Notifikasi(tujuan,pengirim)
+    @staticmethod
+    def buat(jenis,tujuan):
+        jenis = jenis.upper()
+        if jenis == "EMAIL":
+            pengirim = PengirimEmail() # pengirim disini adalah pengirim yang sama dengan parameter class Notifikasi
+        elif jenis == "SMS":
+            pengirim = PengirimSms()
+        elif jenis == "GIT":
+            pengirim = PengirimGit()
+        elif jenis == "TELE":
+            pengirim = PengirimTelegram()
+        else:
+            raise ValueError("Jenis pengirim tidak tersedia")
+            
+        return Notifikasi(tujuan,pengirim)
 
 while True:
-	jenis = input("Masukkan jenis (email/sms/git/tele): ")
-	tujuan = input("Masukkan tujuan: ")
-	pesan = input("Masukkan pesan: ")
+    try:
+    
+        jenis = input("Masukkan jenis (email/sms/git/tele): ")
+        tujuan = input("Masukkan tujuan: ")
+        pesan = input("Masukkan pesan: ")
 
-	notif = NotifikasiFactory_2.buat(jenis,tujuan)
-	notif.kirim(pesan)
+        notif = NotifikasiFactory_2.buat(jenis,tujuan)
+        notif.kirim(pesan)
 
-	lanjut = input ("Lanjut atau tidak (y/n) : ")
-	if lanjut == "n" or lanjut == "N":
-		break
-
+        lanjut = input ("Lanjut atau tidak (y/n) : ")
+        if lanjut == "n" or lanjut == "N":
+            break
+    except ValueError:
+        continue
 ''' agar factory patern lebih bersih dari if elif else bisa juga gini
  class NotifikasiFactory_2:
 

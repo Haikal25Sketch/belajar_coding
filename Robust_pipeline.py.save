@@ -1,0 +1,153 @@
+'''Robust Pipeline'''
+#Robust pipeline : Robust yang berarti kokoh,dan pipeline yang berarti alur proses data
+# Robust pipeline ialah alur data yang kokoh,dia bukan tidak error tetapi:
+'''
+•Sistem stabil
+•Kesalahan tidak disembunyikan
+•Informasi yang benar
+'''
+
+
+import random 
+class ValidNilai:
+    def __set_name__(self, owner, data):
+        self.data = data
+
+    def __set__(self, instance, value):
+        if not isinstance(value, list):
+            raise TypeError("Data harus berupa list")
+
+        for v in value:
+            if not isinstance(v, (int, float)):
+                raise TypeError("Semua nilai harus angka")
+            if v < 0 or v > 100:
+                raise ValueError("Nilai harus antara 0 dan 100")
+
+        instance.__dict__[self.data] = value
+
+    def __get__(self, instance, owner):
+        return instance.__dict__.get(self.data)
+        
+class DataLoader:
+    data = ValidNilai()
+    def __init__(self,data):
+        self.data = data
+
+    def get(self):
+        print ("[INFO] GET A DATA...")
+        return self.data
+
+def cleaner(data):
+    print ("[INFO] CLEAN A DATA...")
+    return [num / 100 for num in data]
+
+class Decision:
+
+    def __init__(self,prob=0.5,seed =99):
+        if not 0 <= prob <= 1:
+            raise ValueError("Prob harus antara 0 dan 1 ")
+        self.prob = prob
+        self.num = random.Random(seed) # agar hasil random bisa diulang,dan lebih baik ditaruh di dalam saja agar tidak dipakai di seluruh tugas
+#self.range menjadi object dari class Random
+    def proses(self,data):
+        print ("[INFO] RUNNING A MODEL...")
+        hasil = []
+        for num in data:
+            if num >=0.85:
+                hasil.append("DITERIMA")
+            elif 0.70 <= num < 0.85:
+                hasil.append("DITERIMA") if self.num.random() < self.prob  else hasil.append("DITOLAK")
+            else :
+                hasil.append("DITOLAK")
+        return hasil
+
+def Hasil (data):
+    print ("[INFO] GET A RESULT...")
+    hasil = {
+    "Diterima":data.count("DITERIMA"),
+    "Ditolak":data.count("DITOLAK")
+    }
+
+    return hasil
+
+
+class Alur:
+    def __init__(self,data,clean,decision,result):
+        self.data = data
+        self.clean = clean
+        self.decision = decision
+        self.result = result
+
+    def proses (self):
+        raw_data = self.data.get()
+        cleaner =self.clean(raw_data)
+        model = self.decision.proses(cleaner)
+        hasil = self.result (model)
+        return hasil
+
+data =[76,98,65,44,56,70,98,76,55,67]
+Pipeline = Alur(DataLoader(data),cleaner,Decision(),Hasil)
+print ("Hasil penerima beasiswa : ",Pipeline.proses())
+
+print()
+
+'''Belajar logger'''
+# Logging : Cara mencatat kejadian di program secara terstruktur.
+'''Bukan sekadar print. Tapi bisa:
+•dikasih level
+•dikirim ke file
+•difilter
+'''
+
+'''
+PERBEDAAN PRINT DAN LOGGER
+print("Halo") → selalu tampil di layar → tidak bisa dikontrol
+
+logger.info("Halo") → bisa disembunyikan → bisa dikirim ke file → bisa dibedakan tingkat pentingnya
+'''
+
+'''
+LEVEL LOGGER
+
+DEBUG: Detail internal (10)
+INFO: Event normal (20)
+WARNING: Ada keanehan (30)
+ERROR: Gagal (40)
+CRITICAL: Sistem rusak parah (50)
+'''
+
+'''IMPLEMENTASI DASAR'''
+import logging
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    filename="app.log",
+    format="%(asctime)s | %(levelname)s | %(message)s",
+    filemode= 'w', # Defaultnya 'a' yaitu append
+    force = True
+)
+
+logger = logging.getLogger(__name__)
+
+logger.debug("Ini debug")
+logger.info("Program berjalan normal")
+logger.warning("Ada sesuatu yang aneh")
+logger.error("Terjadi kesalahan")
+logger.critical("Sistem rusak total")
+
+'''
+
+logging.basicConfig() itu untuk:
+Setup awal logging
+Atur level -> level =
+Atur tujuan output -> filename =
+Atur format -> format =
+Dia bukan logger. Dia bukan method untuk mencatat log. Dia cuma konfigurator awal.
+'''
+
+'''
+CATATAN
+
+basicConfig() hanya bekerja kalau logging BELUM dikonfigurasi.
+Kalau sudah pernah dipanggil sekali, pemanggilan berikutnya diabaikan.
+'''

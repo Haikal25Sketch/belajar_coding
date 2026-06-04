@@ -85,7 +85,7 @@ class Alur:
         hasil = self.result (model)
         return hasil
 
-data =[76,98,65,44,56,70,98,76,55,67]
+data =[12376,98,65,44,56,70,98,76,55,67]
 Pipeline = Alur(DataLoader(data),transform,Decision(),Hasil)
 print ("Hasil penerima beasiswa : ",Pipeline.proses())
 

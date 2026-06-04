@@ -47,6 +47,7 @@ import requests
 import os
 from dotenv import load_dotenv
 import math
+import logging
 
 load_dotenv() #-> mengambil data .env
 
@@ -88,3 +89,39 @@ print ("HASIL EMBEDDING LAPAR DAN PERUT KOSONG ADALAH : ",round(cosine_similarit
 print ("HASIL EMBEDDING LAPAR DAN MENJAHIT : ",round(cosine_similarity(embeddings[0],embeddings[3]),2))
 
 print ("HASIL EMBEDDING LAPAR DAN LAPAR : ",round(cosine_similarity(embeddings[0],embeddings[0]),2))
+# INI SEMUA ADALAH PERMULAAN UNTUK RAG,RAG ASLI DATANYA BUKAN MANUAL ATAUPUN INPUT USER,BISA DARI :
+#-FILE PDF
+#-FILE TXT
+#-WEBSITE
+#-DATABASE
+
+"""
+RAG YANG AKAN DIBABGUN:
+1. Punya dokumen teks (data/pengetahuan)
+2. Potong jadi chunks kecil
+3. Ubah tiap chunk jadi embedding
+4. Simpan chunks + embeddingnya
+
+5. User nanya
+6. Ubah pertanyaan jadi embedding
+7. Cari chunk yang paling mirip
+8. Kasih chunk itu ke Groq AI
+9. Groq jawab berdasarkan chunk itu
+
+Gw udah sedikit memahami 3,5,6,7
+"""
+
+"""MEMBANGUN RAG STEP BY STEP"""
+# Di belajarGroq.py gw mengirim pesan ke Groq dengan format
+"""
+messages = [    {"role": "system", "content": "kamu adalah assistent yang membantuku untuk membandingkan kecantikan karakter fiksi."}]
+"""
+#Di RAG kita akan menambahkan sesuatu di bagian "contentnya" yaitu data
+"""
+messages = [
+    {"role": "system", "content": f"Berdasarkan data ini {data.pdf} jawab pertanyaan ini {input_user}"}]
+"""
+
+
+
+

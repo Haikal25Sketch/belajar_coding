@@ -93,10 +93,7 @@ headers = {
 url = "https://api.github.com/user"
 response = requests.get(url, headers=headers)
 data = response.json()
-
-print("Login:", data["login"])
-print("Name:", data["name"])
-
+print (data)
 print()
 print ("LATIHAN POST ")
 #isi post
@@ -204,7 +201,7 @@ def ambil_API(url):
         data = response.json()
         for key,value in data.items():
             print (f"{key} : {value}")
-
+            
     except requests.exceptions.ConnectionError:
         logger.error("KONEKSI INTERNET MATI,TIDAK BISA MENGAKSES!")
     except requests.exceptions.Timeout:
@@ -215,7 +212,7 @@ def ambil_API(url):
 
     except requests.exceptions.RequestException as e :
         logger.error(f"ERROR!!! {e} ")
-
+    print ("RESPONSE BERHASIL!!")
 take = ambil_API
 take("https://api.github.com")
 

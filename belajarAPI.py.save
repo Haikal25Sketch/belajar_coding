@@ -1,0 +1,72 @@
+import requests
+
+#API : Perantara antara user dan server
+# user minta data -> API proses -> balik data ke user
+
+#cara pakai:
+response = requests.get("https://api.github.com") # () tempat isi url yang menjadi Alamat API
+print ("response.status_code")
+print (response.status_code)
+
+#print (response.json()) INI BELUM RAPI
+data = response.json() # Data menjadi dict
+for key,value in data.items():
+    print (f"{key} : {value}") # INI RAPI
+
+print()
+
+#status code
+"""200: sukses
+404:tidak ditemukan
+500: error server
+"""
+
+"""
+GET: Ambil data dari laci server
+POST : Kirim data ke laci server
+"""
+
+"""
+response itu dict karena data ,tolong pahami haikal
+"""
+
+username = "Haikal25Sketch"  # github gw
+url = f"https://api.github.com/users/{username}"
+
+response = requests.get(url)
+data = response.json()
+
+print("Username:", data["login"])
+print("Public Repos:", data["public_repos"])
+print("Akun dibuat:", data["created_at"])
+print()
+"""latihan mengambil data repos dari github"""
+print ("===data repos===")
+url = f"https://api.github.com/users/{username}/repos" #-> yang paling pojok adalah endpoint
+response = requests.get(url)
+data = response.json()
+#print (data) masih acak acakan
+#repos itu list of dict ,jadi harus diunpack dulu
+for repo in data:
+    print ("Repos : ",repo["name"])
+
+"""belajar API key"""
+print()
+
+from dotenv import load_dotenv
+import requests
+import os
+
+load_dotenv() #-> buka dan baca file .env (file tersembunyi ,bisa dilihat di ls -a)
+token = os.getenv("GITHUB_TOKEN") # Ambil nilai GITHUB TOKEN dari .env
+
+headers = {
+    "Authorization": f"token {token}"
+}
+
+url = "https://api.github.com/user"
+response = requests.get(url, headers=headers)
+data = response.json()
+
+print("Login:", data["login"])
+print("Name:", data["name"])

@@ -1,0 +1,15 @@
+{
+    "Sagiri": {
+        "umur": 12,
+        "hobi": "Menggambar"
+    },
+    "Lilim": {
+        "umur": 14
+    },
+    "Saia": {
+        "umur": 17
+    },
+    "Klee": {
+        "umur": 20
+    }
+}
