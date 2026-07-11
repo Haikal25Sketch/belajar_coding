@@ -53,7 +53,7 @@ print()
 GET: Ambil data dari laci server
 POST : Kirim data ke laci server
 """
-
+"
 """
 response itu dict karena data.json() ,tolong pahami haikal
 """ 
@@ -107,7 +107,7 @@ requests.post(
     timeout=5,              # batas waktu tunggu
 )
 """
-url ="https://httpbin.org/post" # -> API khusuz untuk testing yang akan mengembalikan apa yang kita kirim
+url ="https://httpbingo.org/post" # -> API khusuz untuk testing yang akan mengembalikan apa yang kita kirim
 data ={
 "nama":"Sagiri",
 "umur":12
@@ -198,6 +198,7 @@ def ambil_API(url):
     try:
         response = requests.get(url,headers = headers,timeout = 5)
         response.raise_for_status() #-> angkat error diatas 400
+        print ("RESPONSE BERHASIL!!")
         data = response.json()
         for key,value in data.items():
             print (f"{key} : {value}")
@@ -212,7 +213,6 @@ def ambil_API(url):
 
     except requests.exceptions.RequestException as e :
         logger.error(f"ERROR!!! {e} ")
-    print ("RESPONSE BERHASIL!!")
 take = ambil_API
 take("https://api.github.com")
 
@@ -236,18 +236,33 @@ try:
     class GithubUser(BaseModel):
         login: str
         id: int
-        bio: Optional[str] = "Tidak ada bio" # Default jika null
+        bio: Optional[str] = "Tidak ada bio" # Maksudnya optional disini adalah sebuah nilai boleh berisi T atau None,jadi optional str artinya sebuah nilai boleh berisi str atau none dan "Tidak ada bio" adalah default yang digunakan jika field(int,str,dll itulah field) tidak diberikan 
         public_repos: int = Field(alias="public_repos")
+
+        """
+        Fungsi utama Field
+    Menetapkan default value atau default_factory.
+    Menambahkan validasi seperti min_length, max_length, gt, ge, lt, le.
+    Membuat alias nama field.
+    Menambahkan metadata seperti title, description, dan examples. �
+
+    Kapan dipakai
+    Pakai Field saat kamu ingin model Pydantic bukan cuma tahu tipe data, tapi juga puny    a aturan yang lebih spesifik dan dokumentasi yang lebih jelas, terutama untuk API at    au form validation. 
+
+
+        """
 
     def ambil_user_aman(username):
         url = f"https://api.github.com/users/{username}"
         resp = requests.get(url)
+        print (resp.json())
         if resp.status_code == 200:
             try:
                 # Validasi otomatis: jika 'id' bukan int, akan lempar error
                 user = GithubUser(**resp.json()) 
                 print(f"VALIDASI SUKSES: {user.login} punya {user.public_repos} repos.")
                 return user
+               
             except ValidationError as e:
                 print(f"DATA API TIDAK VALID: {e}")
         return None
@@ -263,11 +278,11 @@ except ImportError:
 # AI API sering membatasi jumlah request per menit.
 import time
 from urllib3.util import Retry
-from requests.adapters import HTTPAdapter
+from requests.adapters import HTTPAdapter #ini masih library requests,terus masuk ke modul adapters setelah itu mengimpor5 class HTTPAdapter
 
 def session_dengan_retry():
-    session = requests.Session()
-    retry = Retry(
+    session = requests.Session() #Session merupakan sebuah class yang ada pada library requests
+    retry = Retry( # Retry adalah sebuah class yang digunakan untuk menyimpan aturan retry(perulangan) ,sedangkan yang melakukan perulangan adalah komponen lain yaitu HTTPAdapter(requests), PoolManager(urllib3) dan HTTPConnectionPool(urllib3)
         total=3,            # Coba lagi maksimal 3 kali
         backoff_factor=1,   # Tunggu 1 detik, lalu 2, lalu 4 (exponential)
         status_forcelist=[429, 500, 502, 503, 504], # Retry hanya jika status ini
@@ -276,6 +291,13 @@ def session_dengan_retry():
     session.mount("https://", adapter)
     return session
 
+"""
+Urutan eksekusi BaseModel Pydantic dengan **kwargs:
+1. Data Masuk: Menerima data (biasanya berupa dictionary).
+2. Di-unpack: Operator `**` membongkar (unpack) dictionary menjadi argumen keyword (key=value). Contoh: User(**data_dict).
+3. Divalidasi: Pydantic memeriksa apakah tipe data yang masuk sesuai dengan deklarasi field pada class (type hint). Pydantic juga akan melakukan konversi tipe data otomatis jika memungkinkan.
+4. Objek Dibuat: Jika semua data valid, Pydantic akan membuat instance (objek) tersebut dan siap digunakan.
+"""
 print("\n--- Testing Robust Session ---")
 s = session_dengan_retry()
 try:
@@ -298,4 +320,17 @@ async def panggil_model_ai(data):
         return resp.json()
 
 # Ini memungkinkan kamu memanggil 100 model AI secara bersamaan!
+"""
+
+"""
+Session berfungsi untuk menyimpan keadaan (state) antar beberapa HTTP request.
+Yang disimpan apa saja?
+Cookies (misalnya setelah login, cookie tetap dipakai)
+
+Cookie adalah data kecil yang dikirim server ke client untuk mengingat identitas atau keadaan client.
+
+Headers bawaan (misalnya User-Agent, Authorization)
+Authentication (auth)
+Connection pooling (koneksi TCP bisa dipakai ulang, jadi lebih cepat)
+Adapter (misalnya HTTPAdapter yang berisi konfigurasi Retry)
 """
