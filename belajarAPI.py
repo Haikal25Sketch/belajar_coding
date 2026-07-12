@@ -16,7 +16,7 @@ requests.get(
     headers=headers,        # kartu identitas
     params={"page": 1,"per_page" : 10},     # filter/pencarian di URL artinya tampilkan halaman 1 perhalaman 10 item(bisa diseting)
     
-    timeout=5,              # batas waktu tunggu response,kalau lebih dari yang ditentukan ,lempar Timeout
+    timeout=5,              # batas waktu tunggu response,kalau lebih dari yang ditentukan ,lempar timeout
     verify=True,            # verifikasi SSL(Keamanan antara server dan user, itulah kenapa https lebih aman dibandigkan http karena data yang dikirim ke server dienkripsi (diubah menjadi kode acak)
     
 )
@@ -53,7 +53,7 @@ print()
 GET: Ambil data dari laci server
 POST : Kirim data ke laci server
 """
-"
+
 """
 response itu dict karena data.json() ,tolong pahami haikal
 """ 
@@ -260,6 +260,7 @@ try:
             try:
                 # Validasi otomatis: jika 'id' bukan int, akan lempar error
                 user = GithubUser(**resp.json()) 
+                print (user)
                 print(f"VALIDASI SUKSES: {user.login} punya {user.public_repos} repos.")
                 return user
                
@@ -272,6 +273,7 @@ try:
 
 except ImportError:
     print("\n[HINT] Install pydantic untuk belajar validasi data: pip install pydantic")
+    
 
 
 # 2. HANDLING RATE LIMITS (Exponential Backoff)
@@ -290,6 +292,25 @@ def session_dengan_retry():
     adapter = HTTPAdapter(max_retries=retry)
     session.mount("https://", adapter)
     return session
+
+"""
+session.get()
+      │
+      ▼
+Session memilih adapter
+      │
+      ▼
+Adapter mengirim request
+      │
+      ▼
+Retry memeriksa
+      │
+      ▼
+Perlu retry?
+      │
+   Ya / Tidak
+"""
+
 
 """
 Urutan eksekusi BaseModel Pydantic dengan **kwargs:
